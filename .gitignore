@@ -1,0 +1,14 @@
+out/
+build/
+*.log
+*.tmp
+.next/
+.open-next/
+.wrangler/
+.DS_Store
+package-lock.json
+node_modules/
+dist/
+coverage/
+.env
+.env.local

@@ -1,0 +1,148 @@
+[
+  {
+    "id": 5358,
+    "name": "The Complete Brand Builder Workbook &#8211; Paperback Edition",
+    "slug": "the-complete-brand-builder-workbook",
+    "parent": 0,
+    "type": "simple",
+    "variation": "",
+    "permalink": "https://boguesgroup.com/product/the-complete-brand-builder-workbook/",
+    "sku": "6zj5kn",
+    "short_description": "<p>The Complete Brand Builder Workbook is an all-encompassing, step-by-step guide for those in need of a marketing and public relations starter kit for their brand.</p>\n<p>Many new business leaders do not actively build their reputation as they are building a product. If you want to secure sales, build trust and see engagement on your site, it’s important to demonstrate that you are an expert in your industry.</p>\n<p>This digital workbook includes expert advice from industry leaders, detailed checklists, examples, and key takeaways to help bolster your reputation and build a roadmap as a new business. The Complete Brand Builder Workbook is ideal for entrepreneurs who are looking to take their business to the next level through thoughtful marketing, public relations, and branding strategies.</p>\n<p>Once completed, the purchaser can request a review of their unique, personalized copy of the workbook by a Bogues Group expert who will offer feedback, answer questions and discuss ideas.</p>",
+    "description": "<p>The Complete Brand Builder Workbook is an all-encompassing, step-by-step guide for those in need of a marketing and public relations starter kit for their brand.</p>\n<p>Many new business leaders do not actively build their reputation as they are building a product. If you want to secure sales, build trust and see engagement on your site, it’s important to demonstrate that you are an expert in your industry.</p>\n<p>This digital workbook includes expert advice from industry leaders, detailed checklists, examples, and key takeaways to help bolster your reputation and build a roadmap as a new business. The Complete Brand Builder Workbook is ideal for entrepreneurs who are looking to take their business to the next level through thoughtful marketing, public relations, and branding strategies.</p>\n<p>Once completed, the purchaser can request a review of their unique, personalized copy of the workbook by a Bogues Group expert who will offer feedback, answer questions and discuss ideas.</p>",
+    "on_sale": false,
+    "prices": {
+      "price": "5999",
+      "regular_price": "5999",
+      "sale_price": "5999",
+      "price_range": null,
+      "currency_code": "USD",
+      "currency_symbol": "$",
+      "currency_minor_unit": 2,
+      "currency_decimal_separator": ".",
+      "currency_thousand_separator": ",",
+      "currency_prefix": "$",
+      "currency_suffix": ""
+    },
+    "price_html": "<span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#036;</span>59.99</span>",
+    "average_rating": "0",
+    "review_count": 0,
+    "images": [
+      {
+        "id": 5359,
+        "src": "https://boguesgroup.com/wp-content/uploads/2022/09/6zj5kn-front-shortedge-384.jpg",
+        "thumbnail": "https://boguesgroup.com/wp-content/uploads/2022/09/6zj5kn-front-shortedge-384-300x300.jpg",
+        "srcset": "https://boguesgroup.com/wp-content/uploads/2022/09/6zj5kn-front-shortedge-384.jpg 384w, https://boguesgroup.com/wp-content/uploads/2022/09/6zj5kn-front-shortedge-384-232x300.jpg 232w",
+        "sizes": "(max-width: 384px) 100vw, 384px",
+        "name": "aHR0cHM6Ly9hc3NldHMubHVsdS5jb20vY292ZXJfdGh1bWJzLzYvei82emo1a24tZnJvbnQtc2hvcnRlZGdlLTM4NC5qcGc=",
+        "alt": ""
+      }
+    ],
+    "categories": [
+      {
+        "id": 49,
+        "name": "Workbooks",
+        "slug": "workbooks-for-sale",
+        "link": "https://boguesgroup.com/product-category/workbooks-for-sale/"
+      }
+    ],
+    "tags": [],
+    "brands": [],
+    "attributes": [],
+    "variations": [],
+    "grouped_products": [],
+    "has_options": false,
+    "is_purchasable": true,
+    "is_in_stock": true,
+    "is_on_backorder": false,
+    "low_stock_remaining": null,
+    "stock_availability": {
+      "text": "",
+      "class": "in-stock"
+    },
+    "sold_individually": false,
+    "add_to_cart": {
+      "text": "Add to cart",
+      "description": "Add to cart: &ldquo;The Complete Brand Builder Workbook &#8211; Paperback Edition&rdquo;",
+      "url": "/wp-json/wc/store/v1/products?per_page=100&#038;add-to-cart=5358",
+      "single_text": "Add to cart",
+      "minimum": 1,
+      "maximum": 9999,
+      "multiple_of": 1
+    },
+    "extensions": {}
+  },
+  {
+    "id": 5087,
+    "name": "The Complete Brand Builder Workbook &#8211; Kindle Edition",
+    "slug": "the-complete-brand-builder-workbook-kindle-edition",
+    "parent": 0,
+    "type": "simple",
+    "variation": "",
+    "permalink": "https://boguesgroup.com/product/the-complete-brand-builder-workbook-kindle-edition/",
+    "sku": "",
+    "short_description": "<p>The Complete Brand Builder Workbook is an all-encompassing, step-by-step guide for those in need of a marketing and public relations starter kit for their brand.</p>\n<p>Many new business leaders do not actively build their reputation as they are building a product. If you want to secure sales, build trust and see engagement on your site, it’s important to demonstrate that you are an expert in your industry.</p>",
+    "description": "<p>The Complete Brand Builder Workbook is an all-encompassing, step-by-step guide for those in need of a marketing and public relations starter kit for their brand.</p>\n<p>Many new business leaders do not actively build their reputation as they are building a product. If you want to secure sales, build trust and see engagement on your site, it’s important to demonstrate that you are an expert in your industry.</p>\n<p>This digital workbook includes expert advice from industry leaders, detailed checklists, examples, and key takeaways to help bolster your reputation and build a roadmap as a new business. The Complete Brand Builder Workbook is ideal for entrepreneurs who are looking to take their business to the next level through thoughtful marketing, public relations, and branding strategies.</p>\n<p>Once completed, the purchaser can request a review of their unique, personalized copy of the workbook by a Bogues Group expert who will offer feedback, answer questions and discuss ideas.</p>",
+    "on_sale": false,
+    "prices": {
+      "price": "5999",
+      "regular_price": "5999",
+      "sale_price": "5999",
+      "price_range": null,
+      "currency_code": "USD",
+      "currency_symbol": "$",
+      "currency_minor_unit": 2,
+      "currency_decimal_separator": ".",
+      "currency_thousand_separator": ",",
+      "currency_prefix": "$",
+      "currency_suffix": ""
+    },
+    "price_html": "<span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#036;</span>59.99</span>",
+    "average_rating": "0",
+    "review_count": 0,
+    "images": [
+      {
+        "id": 5088,
+        "src": "https://boguesgroup.com/wp-content/uploads/2022/09/417nLiJsaXL.jpg",
+        "thumbnail": "https://boguesgroup.com/wp-content/uploads/2022/09/417nLiJsaXL-300x300.jpg",
+        "srcset": "https://boguesgroup.com/wp-content/uploads/2022/09/417nLiJsaXL.jpg 386w, https://boguesgroup.com/wp-content/uploads/2022/09/417nLiJsaXL-232x300.jpg 232w",
+        "sizes": "(max-width: 386px) 100vw, 386px",
+        "name": "417nLiJsaXL",
+        "alt": ""
+      }
+    ],
+    "categories": [
+      {
+        "id": 49,
+        "name": "Workbooks",
+        "slug": "workbooks-for-sale",
+        "link": "https://boguesgroup.com/product-category/workbooks-for-sale/"
+      }
+    ],
+    "tags": [],
+    "brands": [],
+    "attributes": [],
+    "variations": [],
+    "grouped_products": [],
+    "has_options": false,
+    "is_purchasable": true,
+    "is_in_stock": true,
+    "is_on_backorder": false,
+    "low_stock_remaining": null,
+    "stock_availability": {
+      "text": "",
+      "class": "in-stock"
+    },
+    "sold_individually": false,
+    "add_to_cart": {
+      "text": "Add to cart",
+      "description": "Add to cart: &ldquo;The Complete Brand Builder Workbook &#8211; Kindle Edition&rdquo;",
+      "url": "/wp-json/wc/store/v1/products?per_page=100&#038;add-to-cart=5087",
+      "single_text": "Add to cart",
+      "minimum": 1,
+      "maximum": 9999,
+      "multiple_of": 1
+    },
+    "extensions": {}
+  }
+]

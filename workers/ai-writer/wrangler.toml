@@ -1,0 +1,6 @@
+name = "bogues-ai-writer"
+main = "index.ts"
+compatibility_date = "2024-09-23"
+
+[ai]
+binding = "AI"

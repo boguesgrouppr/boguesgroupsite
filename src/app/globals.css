@@ -1,0 +1,402 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* ============================================================
+   Design Tokens (CSS custom properties — always unlayered)
+   ============================================================ */
+
+:root {
+  --color-navy-50: #e8f4fa;
+  --color-navy-100: #c5e3f3;
+  --color-navy-200: #8ec8e6;
+  --color-navy-300: #4da6d4;
+  --color-navy-400: #1a82b5;
+  --color-navy-500: #075E8B;
+  --color-navy-600: #064e73;
+  --color-navy-700: #053f5c;
+  --color-navy-800: #042f45;
+  --color-navy-900: #021f2e;
+
+  --color-gold-50: #fdf8e8;
+  --color-gold-100: #f9edc4;
+  --color-gold-200: #f0d88a;
+  --color-gold-300: #e5c256;
+  --color-gold-400: #d9ad2d;
+  --color-gold-500: #D4AF38;
+  --color-gold-600: #b8951f;
+  --color-gold-700: #8e7318;
+  --color-gold-800: #645111;
+  --color-gold-900: #3a2f0a;
+
+  --color-navy: var(--color-navy-500);
+  --color-navy-dark: var(--color-navy-600);
+  --color-gold: var(--color-gold-500);
+  --color-gold-light: var(--color-gold-300);
+  --color-body: #333333;
+
+  --duration-micro: 150ms;
+  --duration-standard: 250ms;
+  --duration-complex: 500ms;
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================
+   Tailwind Theme Integration
+   ============================================================ */
+
+@theme inline {
+  --color-background: #ffffff;
+  --color-foreground: #333333;
+  --color-navy-50: #e8f4fa;
+  --color-navy-100: #c5e3f3;
+  --color-navy-200: #8ec8e6;
+  --color-navy-300: #4da6d4;
+  --color-navy-400: #1a82b5;
+  --color-navy: #075E8B;
+  --color-navy-dark: #064e73;
+  --color-navy-600: #064e73;
+  --color-navy-700: #053f5c;
+  --color-navy-800: #042f45;
+  --color-navy-900: #021f2e;
+  --color-gold-50: #fdf8e8;
+  --color-gold-100: #f9edc4;
+  --color-gold-200: #f0d88a;
+  --color-gold-300: #e5c256;
+  --color-gold-400: #d9ad2d;
+  --color-gold: #D4AF38;
+  --color-gold-light: #e5c256;
+  --color-gold-600: #b8951f;
+  --color-gold-700: #8e7318;
+  --color-gold-800: #645111;
+  --color-gold-900: #3a2f0a;
+  --color-body: #333333;
+  /* Plus Jakarta Sans for headings, Roboto for body, Poppins for nav, Rubik for buttons */
+  --font-heading: var(--font-heading);
+  --font-sans: var(--font-body), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-nav: var(--font-nav);
+  --font-accent: var(--font-accent);
+}
+
+/* ============================================================
+   Base styles — MUST be in @layer base so Tailwind utilities win
+   ============================================================ */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading), sans-serif;
+    color: var(--color-navy);
+    line-height: 1.2;
+    font-weight: 600;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+    border-radius: inherit;
+  }
+
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* WordPress content: constrain inline SVGs and SVG images */
+  .wp-content svg {
+    max-width: 40px;
+    max-height: 40px;
+    width: auto;
+    height: auto;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  .wp-content .elementor-icon-list-icon svg {
+    max-width: 22px;
+    max-height: 22px;
+  }
+
+  .wp-content img[src$=".svg"] {
+    max-width: 40px;
+    height: auto;
+    display: inline-block;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  /* Hospi-card feature blocks: 2-col grid on desktop */
+  .wp-content .elementor-element-facf9c7 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .wp-content .elementor-element-facf9c7 {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  /* Built for HR Leaders: 2-col grid on desktop */
+  .wp-content .elementor-element-84154d5 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .wp-content .elementor-element-84154d5 {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  /* Hospi-card styling */
+  .wp-content .hospi-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+  }
+
+  .wp-content .hospi-card .elementor-widget-image {
+    flex-shrink: 0;
+  }
+
+  /* ============================================================
+     Education Page Fixes
+     ============================================================ */
+
+  /* 1. "Our Impact" stats: responsive 2x2 grid with styled numbers */
+  .wp-content .elementor-element-f450eeb {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .wp-content .elementor-counter {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    background: var(--color-navy-50);
+    border-radius: 0.75rem;
+  }
+
+  .wp-content .elementor-counter-number-wrapper {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    margin-bottom: 0.25rem;
+  }
+
+  .wp-content .elementor-counter-number,
+  .wp-content .elementor-counter-number-suffix {
+    font-family: var(--font-heading), sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-navy);
+    line-height: 1.1;
+  }
+
+  .wp-content .elementor-counter-number-suffix {
+    color: var(--color-gold);
+  }
+
+  .wp-content .elementor-counter-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-navy-600);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+
+  .wp-content .elementor-counter-number-prefix {
+    display: none;
+  }
+
+  /* 2. Remove excess gap between "Featured Programs" heading and program cards */
+  .wp-content .elementor-element-1e81090 > .e-con-inner {
+    padding-top: 0;
+    padding-bottom: 0;
+    gap: 0;
+  }
+
+  .wp-content .elementor-element-1e81090 .elementor-element-c4772cf {
+    margin-bottom: 1.5rem;
+  }
+
+  .wp-content .elementor-element-34bccc3 {
+    padding-top: 0;
+    margin-top: 0;
+  }
+
+  .wp-content .elementor-element-34bccc3 > .e-con-inner {
+    padding-top: 0;
+  }
+
+  /* 3. Subscription form: names side-by-side, button full-width */
+  .wp-content .ff-name-field-wrapper .ff-t-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .wp-content .fluentform .ff-t-container.ff-column-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .wp-content .fluentform .ff-t-container.ff-column-container > .ff-t-cell {
+    flex-basis: 100%;
+    width: 100%;
+  }
+
+  .wp-content .fluentform .ff_submit_btn_wrapper {
+    width: 100%;
+  }
+
+  .wp-content .fluentform .ff-btn-submit {
+    width: 100%;
+    min-width: 100%;
+    padding: 0.75rem 1.5rem;
+    margin-top: 0.5rem;
+  }
+}
+
+/* ============================================================
+   Cannabis Fund Page Fixes (unlayered to override prose utilities)
+   ============================================================ */
+
+/* 1. Hide "Social Proof", "Individual Benefits", "Collective Power" labels
+   These are section labels that should not appear as visible text */
+.wp-content .elementor-element-5ef380a,
+.wp-content .elementor-element-27ec7a1,
+.wp-content .elementor-element-185ef37 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* 2. Partner brand logos - consistent height, centered horizontal row */
+.wp-content .elementor-element-7c17660 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.wp-content .elementor-element-7c17660 .e-con {
+  flex: none;
+  width: auto;
+}
+
+.wp-content .elementor-element-7c17660 img {
+  height: 3.5rem;
+  width: auto;
+  object-fit: contain;
+  max-width: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* 3. Remove fake testimonial section entirely (placeholder lorem ipsum content) */
+.wp-content .elementor-element-656528d,
+.wp-content .elementor-element-633becf {
+  display: none;
+}
+
+/* Elementor hidden classes (not functional without Elementor CSS) */
+.wp-content .elementor-hidden-desktop.elementor-hidden-tablet.elementor-hidden-mobile {
+  display: none;
+}
+
+/* 4. "Featured In" logo bar styling */
+.wp-content .elementor-element-1a68578 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.wp-content .elementor-element-1a68578 > .e-con {
+  flex: none;
+  width: auto;
+}
+
+.wp-content .elementor-element-1a68578 h4 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #9ca3af;
+  opacity: 0.7;
+  white-space: nowrap;
+  margin: 0;
+}
+
+/* ============================================================
+   Coaches Roundtable Funnel Page Fixes
+   ============================================================ */
+
+/* Hide "Simple Process" and "Benefits" section labels (visible anchor text) */
+.wp-content .elementor-element-edd942a,
+.wp-content .elementor-element-1236e7b,
+.wp-content .elementor-element-c3a4b8a {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Color inline SVG icons (bullseye, trending arrow, etc.) with brand gold */
+.wp-content .elementor-icon-box-icon svg {
+  color: var(--color-gold);
+  stroke: var(--color-gold);
+}
+
+/* ============================================================
+   Reduced Motion (unlayered — intentional override via !important)
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
