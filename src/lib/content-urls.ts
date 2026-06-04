@@ -1,14 +1,32 @@
 // URL rewriting and text helpers — no large JSON imports (safe for client bundles).
 
+import {
+  getMediaBaseUrl,
+  stripScaledSuffix,
+  stripWpSizeSuffix,
+  toMediaPath,
+  toMediaUrl,
+} from "./media-url";
+
+export { stripScaledSuffix, stripWpSizeSuffix, toMediaPath, toMediaUrl } from "./media-url";
+
 export function rewriteContentUrls(html: string): string {
   return html
     .replace(
-      /https?:\/\/(?:www\.)?boguesgroup\.com\/wp-content\/uploads\/([^"'\s<>]+)/g,
-      (_match, filePath: string) => {
-        const cleanPath = stripWpSizeSuffix("/media/" + filePath);
-        return cleanPath;
-      }
+      /https?:\/\/(?:www\.)?boguesgroup\.com\/wp-content\/uploads\/([^"'\s<>]+)/gi,
+      (_match, filePath: string) => toMediaUrl(`/media/${filePath}`)
     )
+    .replace(
+      /https?:\/\/(?:www\.)?boguesgroup\.com\/media\/([^"'\s<>]+)/gi,
+      (_match, filePath: string) => toMediaUrl(`/media/${filePath}`)
+    )
+    .replace(
+      /https?:\/\/[^/"'\s<>]+\.pages\.dev\/media\/([^"'\s<>]+)/gi,
+      (_match, filePath: string) => toMediaUrl(`/media/${filePath}`)
+    )
+    .replace(/src="\/media\//g, `src="${getMediaBaseUrl()}/media/`)
+    .replace(/src='\/media\//g, `src='${getMediaBaseUrl()}/media/`)
+    .replace(/href="\/media\//g, `href="${getMediaBaseUrl()}/media/`)
     .replace(
       /https?:\/\/(?:www\.)?boguesgroup\.com\/register\/[^"'\s<>]*/g,
       "/contact?inquiry=workbook"
@@ -19,8 +37,10 @@ export function rewriteContentUrls(html: string): string {
     );
 }
 
-function stripWpSizeSuffix(url: string): string {
-  return url.replace(/-\d+x\d+(\.\w+)$/, "$1");
+/** Full CDN URL for content images (no thumbnails or -scaled). */
+export function resolveFullImageSrc(url: string): string {
+  if (!url) return url;
+  return toMediaUrl(url);
 }
 
 export function stripHtml(html: string): string {

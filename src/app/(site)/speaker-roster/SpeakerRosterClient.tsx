@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { SPEAKER_BOOKING_URL } from "@/lib/speaker-booking";
+import { toMediaUrl } from "@/lib/media-url";
 
 type SportType = "NBA" | "NFL" | "Speaker";
 
@@ -198,20 +199,10 @@ function normalizeImagePath(speakerName: string, imageUrl: string) {
   }
 
   if (!imageUrl) {
-    return "https://boguesgroup.com/media/2024/05/Charles-Oakley-New.jpg";
+    return toMediaUrl("/media/2024/05/Charles-Oakley-New.jpg");
   }
 
-  const uploadsPrefix = "https://boguesgroup.com/wp-content/uploads/";
-  if (imageUrl.startsWith(uploadsPrefix)) {
-    return `https://boguesgroup.com/media/${imageUrl.slice(uploadsPrefix.length)}`;
-  }
-
-  const mediaPrefix = "https://boguesgroup.com/media/";
-  if (imageUrl.startsWith(mediaPrefix)) {
-    return imageUrl;
-  }
-
-  return imageUrl;
+  return toMediaUrl(imageUrl);
 }
 
 export default function SpeakerRosterClient() {

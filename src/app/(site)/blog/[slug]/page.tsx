@@ -12,16 +12,7 @@ import {
 import ContentRenderer from "@/components/ContentRenderer";
 import FeaturedImage from "@/components/FeaturedImage";
 import PageViewTracker from "@/components/PageViewTracker";
-
-const BOGUES_GROUP_ORIGIN = "https://boguesgroup.com";
-
-function toAbsoluteBoguesUrl(url: string | null): string | null {
-  if (!url) return null;
-  if (url.startsWith("http://") || url.startsWith("https://")) {
-    return url;
-  }
-  return `${BOGUES_GROUP_ORIGIN}${url.startsWith("/") ? url : `/${url}`}`;
-}
+import { toAbsoluteMediaUrl } from "@/lib/media-url";
 
 export async function generateStaticParams() {
   const posts = await getAllPosts();
@@ -41,8 +32,8 @@ export async function generateMetadata({
 
   const title = `${stripHtml(post.title.rendered)} - Bogues Group`;
   const description = stripHtml(post.excerpt.rendered).slice(0, 160);
-  const imageUrl = toAbsoluteBoguesUrl(
-    post._featuredImage || getMediaUrl(post.featured_media)
+  const imageUrl = toAbsoluteMediaUrl(
+    post._featuredImage || getMediaUrl(post.featured_media) || ""
   );
 
   return {
@@ -77,9 +68,8 @@ export default async function BlogPostPage({
     notFound();
   }
 
-  const imageUrl = toAbsoluteBoguesUrl(
-    post._featuredImage || getMediaUrl(post.featured_media)
-  );
+  const imageUrl =
+    post._featuredImage || getMediaUrl(post.featured_media) || "";
   const imageAlt = getMediaAlt(post.featured_media);
 
   return (

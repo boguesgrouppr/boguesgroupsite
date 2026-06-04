@@ -10,11 +10,26 @@ const path = require("path");
 const MEDIA_JSON = path.join(__dirname, "..", "src", "data", "media.json");
 const OUTPUT = path.join(__dirname, "..", "src", "data", "media-lookup.json");
 
-function rewriteMediaUrl(url) {
-  return url.replace(
-    /https?:\/\/(?:www\.)?boguesgroup\.com\/wp-content\/uploads\//g,
+function stripWpSizeSuffix(url) {
+  return url.replace(/-\d+x\d+(\.[^./?]+)(?:\?.*)?$/i, "$1");
+}
+
+function stripScaledSuffix(url) {
+  return url.replace(/-scaled(\.[^./?]+)$/i, "$1");
+}
+
+function toLocalMediaPath(url) {
+  let path = url.replace(
+    /https?:\/\/(?:www\.)?boguesgroup\.com\/wp-content\/uploads\//gi,
     "/media/"
   );
+  path = path.replace(
+    /https?:\/\/(?:www\.)?boguesgroup\.com\/media\//gi,
+    "/media/"
+  );
+  path = stripWpSizeSuffix(path);
+  path = stripScaledSuffix(path);
+  return path;
 }
 
 function main() {
@@ -23,7 +38,7 @@ function main() {
 
   for (const item of media) {
     if (!item?.id || !item?.source_url) continue;
-    lookup[item.id] = [rewriteMediaUrl(item.source_url), item.alt_text || ""];
+    lookup[item.id] = [toLocalMediaPath(item.source_url), item.alt_text || ""];
   }
 
   fs.writeFileSync(OUTPUT, JSON.stringify(lookup));

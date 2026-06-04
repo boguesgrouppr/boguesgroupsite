@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { resolveFullImageSrc } from "@/lib/content-urls";
 
 interface FeaturedImageProps {
   src: string;
@@ -11,6 +12,7 @@ interface FeaturedImageProps {
 
 export default function FeaturedImage({ src, alt, priority = false }: FeaturedImageProps) {
   const [error, setError] = useState(false);
+  const imageSrc = resolveFullImageSrc(src);
 
   if (error) {
     return (
@@ -30,7 +32,7 @@ export default function FeaturedImage({ src, alt, priority = false }: FeaturedIm
     <div className="mx-auto max-w-4xl px-6">
       <div className="relative -mt-8 overflow-hidden rounded-lg shadow-xl">
         <Image
-          src={src}
+          src={imageSrc}
           alt={alt}
           width={896}
           height={504}

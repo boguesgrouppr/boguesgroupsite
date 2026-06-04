@@ -6,21 +6,11 @@ import parse, {
   Text,
   domToReact,
 } from "html-react-parser";
-import { rewriteContentUrls } from "@/lib/content-urls";
+import { resolveFullImageSrc, rewriteContentUrls } from "@/lib/content-urls";
 import ContentImage from "./ContentImage";
 
 interface ContentRendererProps {
   html: string;
-}
-
-const BOGUES_GROUP_ORIGIN = "https://boguesgroup.com";
-
-function toAbsoluteBoguesUrl(url: string): string {
-  if (!url) return url;
-  if (url.startsWith("http://") || url.startsWith("https://")) {
-    return url;
-  }
-  return `${BOGUES_GROUP_ORIGIN}${url.startsWith("/") ? url : `/${url}`}`;
 }
 
 /**
@@ -60,7 +50,7 @@ export default function ContentRenderer({ html }: ContentRendererProps) {
   const options: HTMLReactParserOptions = {
     replace(domNode) {
       if (domNode instanceof Element && domNode.name === "img") {
-        const src = toAbsoluteBoguesUrl(domNode.attribs.src || "");
+        const src = resolveFullImageSrc(domNode.attribs.src || "");
         const alt = domNode.attribs.alt || "";
         const className = domNode.attribs.class || "";
 
@@ -84,7 +74,7 @@ export default function ContentRenderer({ html }: ContentRendererProps) {
 
       // If an <a> tag wraps an image, ensure it opens in a new tab
       if (domNode instanceof Element && isImageLink(domNode)) {
-        const href = toAbsoluteBoguesUrl(domNode.attribs.href || "");
+        const href = domNode.attribs.href || "";
         const rel = domNode.attribs.rel || "noopener noreferrer";
         return (
           <a href={href} target="_blank" rel={rel}>

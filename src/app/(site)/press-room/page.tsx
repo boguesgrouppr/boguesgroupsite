@@ -36,18 +36,8 @@ type PressCategory =
   | "hospitality"
   | "sports";
 
-const BOGUES_GROUP_ORIGIN = "https://boguesgroup.com";
-
 function includesAny(text: string, keywords: string[]) {
   return keywords.some((keyword) => text.includes(keyword));
-}
-
-function toAbsoluteBoguesUrl(url: string | null): string | null {
-  if (!url) return null;
-  if (url.startsWith("http://") || url.startsWith("https://")) {
-    return url;
-  }
-  return `${BOGUES_GROUP_ORIGIN}${url.startsWith("/") ? url : `/${url}`}`;
 }
 
 function classifyArticle(slug: string, title: string, excerpt: string): PressCategory {
@@ -127,7 +117,7 @@ export default async function PressRoomPage() {
         slug: post.slug,
         title: post.title.rendered,
         excerpt: cleanExcerpt,
-        imageUrl: toAbsoluteBoguesUrl(post._featuredImage || getMediaUrl(post.featured_media)),
+        imageUrl: post._featuredImage || getMediaUrl(post.featured_media),
         imageAlt: getMediaAlt(post.featured_media),
         date: formatDate(post.date),
         category: classifyArticle(post.slug, post.title.rendered, cleanExcerpt),

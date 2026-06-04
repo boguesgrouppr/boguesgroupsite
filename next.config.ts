@@ -10,6 +10,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "boguesgroup.com",
       },
+      {
+        protocol: "https",
+        hostname: "www.boguesgroup.com",
+      },
+      {
+        protocol: "https",
+        hostname: "bogues-group.pages.dev",
+      },
     ],
   },
 };

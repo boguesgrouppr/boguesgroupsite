@@ -4,6 +4,7 @@ import categoriesData from "@/data/categories.json";
 import mediaLookup from "@/data/media-lookup.json";
 import pressSlugsData from "@/data/press-slugs.json";
 import { rewriteContentUrls, stripHtml, formatDate } from "./content-urls";
+import { toMediaUrl } from "./media-url";
 import { supabase } from "./supabase";
 
 export { rewriteContentUrls, stripHtml, formatDate } from "./content-urls";
@@ -53,7 +54,8 @@ const mediaById = mediaLookup as Record<string, string[]>;
 
 export function getMediaUrl(id: number): string | null {
   const entry = mediaById[String(id)];
-  return entry?.[0] ?? null;
+  if (!entry?.[0]) return null;
+  return toMediaUrl(entry[0]);
 }
 
 export function getMediaAlt(id: number): string {
@@ -94,7 +96,7 @@ export async function getAllPosts(): Promise<WPContent[]> {
     const wp = blogPostToWPContent(post);
     // Use featured_image from Supabase if available, otherwise try media map
     if (post.featured_image) {
-      wp._featuredImage = post.featured_image;
+      wp._featuredImage = toMediaUrl(post.featured_image);
     }
     return wp;
   });
@@ -113,7 +115,7 @@ export async function getPost(slug: string): Promise<WPContent | undefined> {
   const post = data as BlogPost;
   const wp = blogPostToWPContent(post);
   if (post.featured_image) {
-    wp._featuredImage = post.featured_image;
+    wp._featuredImage = toMediaUrl(post.featured_image);
   }
   return wp;
 }
