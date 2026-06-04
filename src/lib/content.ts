@@ -1,9 +1,12 @@
 import pagesData from "@/data/pages.json";
 import caseStudiesData from "@/data/case-studies.json";
 import categoriesData from "@/data/categories.json";
-import mediaData from "@/data/media.json";
+import mediaLookup from "@/data/media-lookup.json";
 import pressSlugsData from "@/data/press-slugs.json";
+import { rewriteContentUrls, stripHtml, formatDate } from "./content-urls";
 import { supabase } from "./supabase";
+
+export { rewriteContentUrls, stripHtml, formatDate } from "./content-urls";
 
 export interface WPContent {
   id: number;
@@ -36,18 +39,6 @@ export interface BlogPost {
   author: number;
 }
 
-export interface WPMedia {
-  id: number;
-  source_url: string;
-  alt_text: string;
-  title: { rendered: string };
-  media_details?: {
-    width: number;
-    height: number;
-    sizes?: Record<string, { source_url: string; width: number; height: number }>;
-  };
-}
-
 export interface WPCategory {
   id: number;
   name: string;
@@ -58,55 +49,15 @@ export interface WPCategory {
 const pages = pagesData as WPContent[];
 const caseStudies = caseStudiesData as WPContent[];
 const categories = categoriesData as WPCategory[];
-const media = mediaData as unknown as WPMedia[];
-
-// Media lookup
-const mediaMap = new Map(media.map((m) => [m.id, m]));
-
-// Strip WordPress image size suffixes (e.g., "-300x300", "-1024x768") from filenames
-// so URLs point to the original full-size file we have locally.
-function stripWpSizeSuffix(url: string): string {
-  return url.replace(/-\d+x\d+(\.\w+)$/, "$1");
-}
-
-// Rewrite media URLs from WordPress to local /media/ paths
-function rewriteMediaUrl(url: string): string {
-  return url.replace(
-    /https?:\/\/(?:www\.)?boguesgroup\.com\/wp-content\/uploads\//g,
-    "/media/"
-  );
-}
+const mediaById = mediaLookup as Record<string, string[]>;
 
 export function getMediaUrl(id: number): string | null {
-  const item = mediaMap.get(id);
-  if (!item) return null;
-  return rewriteMediaUrl(item.source_url);
-}
-
-// Rewrite WordPress content URLs to local /media/ paths and strip size suffixes.
-// Also rewrite dead WordPress registration/account URLs to /contact.
-export function rewriteContentUrls(html: string): string {
-  return html
-    .replace(
-      /https?:\/\/(?:www\.)?boguesgroup\.com\/wp-content\/uploads\/([^"'\s<>]+)/g,
-      (_match, path: string) => {
-        // Strip size suffix so it resolves to the original file
-        const cleanPath = stripWpSizeSuffix("/media/" + path);
-        return cleanPath;
-      }
-    )
-    .replace(
-      /https?:\/\/(?:www\.)?boguesgroup\.com\/register\/[^"'\s<>]*/g,
-      "/contact?inquiry=workbook"
-    )
-    .replace(
-      /https?:\/\/(?:www\.)?boguesgroup\.com\/my-account\/[^"'\s<>]*/g,
-      "/contact?inquiry=account"
-    );
+  const entry = mediaById[String(id)];
+  return entry?.[0] ?? null;
 }
 
 export function getMediaAlt(id: number): string {
-  return mediaMap.get(id)?.alt_text || "";
+  return mediaById[String(id)]?.[1] ?? "";
 }
 
 // --- Blog Posts (from Supabase) ---
@@ -206,16 +157,3 @@ export function getCategoryName(id: number): string {
   return categories.find((c) => c.id === id)?.name || "Uncategorized";
 }
 
-// Strip HTML tags for plain text excerpts
-export function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "").replace(/&amp;/g, "&").replace(/&#8217;/g, "'").replace(/&#8211;/g, "-").replace(/&#038;/g, "&").replace(/&nbsp;/g, " ").replace(/\[\.\.\.\]/g, "...").trim();
-}
-
-// Format date
-export function formatDate(dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}

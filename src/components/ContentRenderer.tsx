@@ -6,7 +6,7 @@ import parse, {
   Text,
   domToReact,
 } from "html-react-parser";
-import { rewriteContentUrls } from "@/lib/content";
+import { rewriteContentUrls } from "@/lib/content-urls";
 import ContentImage from "./ContentImage";
 
 interface ContentRendererProps {

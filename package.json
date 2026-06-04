@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/fix-media-symlinks.js",
+    "prebuild": "node scripts/fix-media-symlinks.js && node scripts/build-media-lookup.js",
     "build": "next build",
     "build:cloudflare": "opennextjs-cloudflare build",
     "preview:cloudflare": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
