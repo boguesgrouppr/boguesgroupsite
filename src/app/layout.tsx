@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Plus_Jakarta_Sans, Roboto, Poppins, Rubik } from "next/font/google";
 import QueryProvider from "@/contexts/QueryProvider";
 import "./globals.css";
@@ -63,16 +64,20 @@ export default function RootLayout({
       lang="en"
       className={`${plusJakarta.variable} ${roboto.variable} ${poppins.variable} ${rubik.variable} h-full antialiased`}
     >
-      <head>
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-1G1HEFQKMR" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-1G1HEFQKMR');`,
-          }}
-        />
-      </head>
       <body className="min-h-full flex flex-col">
         <QueryProvider>{children}</QueryProvider>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-1G1HEFQKMR"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-1G1HEFQKMR');
+          `}
+        </Script>
       </body>
     </html>
   );

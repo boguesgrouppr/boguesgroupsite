@@ -3,6 +3,9 @@ import { getAllPosts, getMediaUrl, getMediaAlt, stripHtml, formatDate } from "@/
 import Card from "@/components/Card";
 import Hero from "@/components/Hero";
 
+export const dynamic = "force-static";
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "Blog - Bogues Group",
   description:

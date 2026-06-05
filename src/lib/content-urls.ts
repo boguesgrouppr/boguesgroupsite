@@ -1,14 +1,74 @@
 // URL rewriting and text helpers — no large JSON imports (safe for client bundles).
 
-import {
-  getMediaBaseUrl,
-  stripScaledSuffix,
-  stripWpSizeSuffix,
-  toMediaPath,
-  toMediaUrl,
-} from "./media-url";
+import { getMediaBaseUrl, toMediaUrl } from "./media-url";
 
-export { stripScaledSuffix, stripWpSizeSuffix, toMediaPath, toMediaUrl } from "./media-url";
+function stripScriptTags(html: string): string {
+  return html.replace(
+    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+    ""
+  );
+}
+
+export function prepareContentHtml(html: string): string {
+  return stripScriptTags(rewriteContentUrls(html));
+}
+
+export type ContentSegment =
+  | { type: "html"; content: string }
+  | { type: "embed"; content: string };
+
+const MAILCHIMP_EMBED =
+  /<div[^>]*id=["']mc_embed_signup[^"']*["'][^>]*>/i;
+
+function extractDivBlock(html: string, divOpen: number): string | null {
+  let depth = 0;
+  let i = divOpen;
+  while (i < html.length) {
+    if (html.startsWith("<div", i)) {
+      depth++;
+      i += 4;
+    } else if (html.startsWith("</div>", i)) {
+      depth--;
+      if (depth === 0) {
+        return html.slice(divOpen, i + 6);
+      }
+      i += 6;
+    } else {
+      i++;
+    }
+  }
+  return null;
+}
+
+export function splitContentSegments(html: string): ContentSegment[] {
+  const segments: ContentSegment[] = [];
+  let cursor = 0;
+
+  while (cursor < html.length) {
+    const searchSlice = html.slice(cursor);
+    const match = searchSlice.match(MAILCHIMP_EMBED);
+    if (!match || match.index === undefined) {
+      const tail = html.slice(cursor);
+      if (tail.trim()) segments.push({ type: "html", content: tail });
+      break;
+    }
+
+    const embedStart = cursor + match.index;
+    const before = html.slice(cursor, embedStart);
+    if (before.trim()) segments.push({ type: "html", content: before });
+
+    const block = extractDivBlock(html, embedStart);
+    if (!block) {
+      segments.push({ type: "html", content: html.slice(cursor) });
+      break;
+    }
+
+    segments.push({ type: "embed", content: block });
+    cursor = embedStart + block.length;
+  }
+
+  return segments.length > 0 ? segments : [{ type: "html", content: html }];
+}
 
 export function rewriteContentUrls(html: string): string {
   return html

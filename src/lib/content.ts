@@ -66,7 +66,7 @@ export function getMediaAlt(id: number): string {
 
 function blogPostToWPContent(post: BlogPost): WPContent {
   return {
-    id: post.wp_id || post.id,
+    id: post.id,
     slug: post.slug,
     date: post.date,
     title: { rendered: post.title },

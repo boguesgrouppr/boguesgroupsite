@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import {
-  getAllPosts,
   getPost,
   getMediaUrl,
   getMediaAlt,
@@ -13,12 +12,15 @@ import ContentRenderer from "@/components/ContentRenderer";
 import FeaturedImage from "@/components/FeaturedImage";
 import PageViewTracker from "@/components/PageViewTracker";
 import { toAbsoluteMediaUrl } from "@/lib/media-url";
+import { supabase } from "@/lib/supabase";
 
 export async function generateStaticParams() {
-  const posts = await getAllPosts();
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
+  const { data: posts } = await supabase
+    .from("blog_posts")
+    .select("slug")
+    .eq("status", "publish");
+
+  return posts?.map(({ slug }) => ({ slug })) ?? [];
 }
 
 export async function generateMetadata({
