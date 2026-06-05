@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import Link from "next/link";
+import NavLink from "@/components/NavLink";
 import Hero from "@/components/Hero";
 import Card from "@/components/Card";
 import LogoCarousel from "@/components/LogoCarousel";
@@ -116,7 +116,7 @@ export default async function Home() {
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {services.map((service) => (
-              <Link
+              <NavLink
                 key={service.title}
                 href="/services"
                 className="group block rounded-2xl p-8 border border-gray-200 transition-all duration-300 hover:-translate-y-1"
@@ -129,7 +129,7 @@ export default async function Home() {
                 <p className="text-gray-500 text-sm leading-relaxed">
                   {service.description}
                 </p>
-              </Link>
+              </NavLink>
             ))}
           </div>
         </div>
@@ -148,12 +148,12 @@ export default async function Home() {
                 See how we deliver results for our clients.
               </p>
             </div>
-            <Link
+            <NavLink
               href="/case-studies"
               className="hidden sm:inline-block text-[#075E8B] font-semibold hover:text-[#D4AF38] transition-colors duration-200"
             >
               View All &rarr;
-            </Link>
+            </NavLink>
           </div>
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {caseStudies.map((cs) => (
@@ -169,12 +169,12 @@ export default async function Home() {
             ))}
           </div>
           <div className="mt-10 text-center sm:hidden">
-            <Link
+            <NavLink
               href="/case-studies"
               className="text-[#075E8B] font-semibold hover:text-[#D4AF38] transition-colors duration-200"
             >
               View All Case Studies &rarr;
-            </Link>
+            </NavLink>
           </div>
         </div>
       </section>
@@ -192,12 +192,12 @@ export default async function Home() {
                 News, insights, and updates from The Bogues Group.
               </p>
             </div>
-            <Link
+            <NavLink
               href="/blog"
               className="hidden sm:inline-block text-[#075E8B] font-semibold hover:text-[#D4AF38] transition-colors duration-200"
             >
               View All &rarr;
-            </Link>
+            </NavLink>
           </div>
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => {
@@ -217,12 +217,12 @@ export default async function Home() {
             })}
           </div>
           <div className="mt-10 text-center sm:hidden">
-            <Link
+            <NavLink
               href="/blog"
               className="text-[#075E8B] font-semibold hover:text-[#D4AF38] transition-colors duration-200"
             >
               View All Posts &rarr;
-            </Link>
+            </NavLink>
           </div>
         </div>
       </section>
@@ -245,12 +245,12 @@ export default async function Home() {
             impact.
           </p>
           <div className="mt-8 sm:mt-12">
-            <Link
+            <NavLink
               href="/contact"
               className="inline-block rounded-lg bg-[#D4AF38] px-8 py-4 text-base font-bold text-[#021f2e] shadow-lg transition-all duration-200 hover:bg-[#e5c256] hover:shadow-xl hover:scale-[1.03] sm:px-10 sm:py-5 sm:text-lg whitespace-nowrap"
             >
               Start a Conversation
-            </Link>
+            </NavLink>
           </div>
         </div>
       </section>

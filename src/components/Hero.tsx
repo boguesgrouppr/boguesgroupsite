@@ -1,4 +1,4 @@
-import Link from "next/link";
+import NavLink from "@/components/NavLink";
 
 interface HeroProps {
   title: string;
@@ -62,12 +62,12 @@ export default function Hero({
                 {ctaText}
               </a>
             ) : (
-              <Link
+              <NavLink
                 href={ctaHref}
                 className="inline-block rounded-lg bg-[#D4AF38] px-8 py-4 text-base font-bold text-[#021f2e] shadow-lg transition-all duration-200 hover:bg-[#e5c256] hover:shadow-xl hover:scale-[1.03] sm:px-10 sm:py-5 sm:text-lg whitespace-nowrap"
               >
                 {ctaText}
-              </Link>
+              </NavLink>
             )}
           </div>
         )}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import Link from "next/link";
+import NavLink from "@/components/NavLink";
 import { usePathname } from "next/navigation";
 
 interface DropdownItem {
@@ -105,7 +105,7 @@ function DesktopDropdown({
         }`}
       >
         {item.dropdown!.map((sub) => (
-          <Link
+          <NavLink
             key={sub.href}
             href={sub.href}
             className={`block px-4 py-2.5 text-sm transition-colors ${
@@ -117,7 +117,7 @@ function DesktopDropdown({
             tabIndex={isOpen ? 0 : -1}
           >
             {sub.label}
-          </Link>
+          </NavLink>
         ))}
       </div>
     </div>
@@ -177,13 +177,13 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link href="/" className="shrink-0">
+          <NavLink href="/" className="shrink-0">
             <img
               src="/logo.png"
               alt="Bogues Group"
               className="h-14 w-auto"
             />
-          </Link>
+          </NavLink>
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-7">
@@ -199,7 +199,7 @@ export default function Header() {
                   onClose={closeDropdown}
                 />
               ) : (
-                <Link
+                <NavLink
                   key={item.label}
                   href={item.href}
                   className={`transition-colors text-sm font-medium tracking-wide uppercase ${
@@ -207,7 +207,7 @@ export default function Header() {
                   }`}
                 >
                   {item.label}
-                </Link>
+                </NavLink>
               )
             )}
           </nav>
@@ -302,7 +302,7 @@ export default function Header() {
                     }`}
                   >
                     {item.dropdown.map((sub) => (
-                      <Link
+                      <NavLink
                         key={sub.href}
                         href={sub.href}
                         className={`block py-2 text-sm transition-colors ${
@@ -313,12 +313,12 @@ export default function Header() {
                         onClick={() => setMobileOpen(false)}
                       >
                         {sub.label}
-                      </Link>
+                      </NavLink>
                     ))}
                   </div>
                 </>
               ) : (
-                <Link
+                <NavLink
                   href={item.href}
                   className={`block py-3 text-sm font-medium tracking-wide uppercase ${
                     isItemActive(item) ? "text-gold" : "text-white/90"
@@ -326,7 +326,7 @@ export default function Header() {
                   onClick={() => setMobileOpen(false)}
                 >
                   {item.label}
-                </Link>
+                </NavLink>
               )}
             </div>
           ))}

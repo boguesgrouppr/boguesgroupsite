@@ -65,6 +65,10 @@ export default function RootLayout({
       className={`${plusJakarta.variable} ${roboto.variable} ${poppins.variable} ${rubik.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <Script
+          src="/disable-rsc-prefetch.js"
+          strategy="beforeInteractive"
+        />
         <QueryProvider>{children}</QueryProvider>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-1G1HEFQKMR"

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import NavLink from "@/components/NavLink";
 import Hero from "@/components/Hero";
 
 export const metadata = {
@@ -84,7 +84,7 @@ export default function ServicesPage() {
         <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service) => (
-            <Link
+            <NavLink
               key={service.title}
               href={`/services/${service.slug}`}
               className="rounded-2xl p-8 border border-gray-200 transition-all duration-300 hover:-translate-y-1 block"
@@ -97,7 +97,7 @@ export default function ServicesPage() {
               <p className="text-gray-500 text-sm leading-relaxed">
                 {service.description}
               </p>
-            </Link>
+            </NavLink>
           ))}
         </div>
         </div>

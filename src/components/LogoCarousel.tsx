@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import NavLink from "@/components/NavLink";
 
 type ClientLogo = {
   src: string;
@@ -64,9 +64,9 @@ export default function LogoCarousel() {
             );
 
             return client.href ? (
-              <Link key={`${client.alt}-${i}`} href={client.href} className={className} style={style}>
+              <NavLink key={`${client.alt}-${i}`} href={client.href} className={className} style={style}>
                 {img}
-              </Link>
+              </NavLink>
             ) : (
               <div key={`${client.alt}-${i}`} className={className} style={style}>
                 {img}

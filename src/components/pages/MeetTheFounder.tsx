@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import NavLink from "@/components/NavLink";
 
 const THEME_DARK = "#075E8B";
 const THEME_PURPLE = "#075E8B";
@@ -135,7 +135,7 @@ export default function MeetTheFounder() {
 
               <div className="mt-10 flex flex-wrap gap-4">
 
-                <Link
+                <NavLink
                   href="http://www.business-champs.com"
                   target="_blank"
                   className="inline-flex items-center justify-center rounded-xl px-7 py-4 text-white font-semibold transition-all hover:scale-[1.02]"
@@ -144,9 +144,9 @@ export default function MeetTheFounder() {
                   }}
                 >
                   Visit Podcast
-                </Link>
+                </NavLink>
 
-                <Link
+                <NavLink
                   href="/media/2024/03/BG-4-Year-Flyer-FINAL.pdf"
                   target="_blank"
                   className="inline-flex items-center justify-center rounded-xl px-7 py-4 font-semibold border transition-all hover:scale-[1.02]"
@@ -156,7 +156,7 @@ export default function MeetTheFounder() {
                   }}
                 >
                   Download Profile
-                </Link>
+                </NavLink>
 
               </div>
 
@@ -254,7 +254,7 @@ export default function MeetTheFounder() {
 
           </div>
 
-          <Link
+          <NavLink
             href="/webinars"
             className="inline-flex items-center justify-center rounded-xl px-8 py-4 text-white font-semibold transition-all hover:scale-[1.02]"
             style={{
@@ -262,7 +262,7 @@ export default function MeetTheFounder() {
             }}
           >
             View More Webinars
-          </Link>
+          </NavLink>
 
         </div>
       </section>
@@ -288,7 +288,7 @@ export default function MeetTheFounder() {
             long-term impact through meaningful storytelling.
           </p>
 
-          <Link
+          <NavLink
             href="/contact"
             className="inline-flex items-center justify-center rounded-xl px-8 py-4 text-white font-semibold transition-all hover:scale-[1.02]"
             style={{
@@ -296,7 +296,7 @@ export default function MeetTheFounder() {
             }}
           >
             Start a Conversation
-          </Link>
+          </NavLink>
 
         </div>
       </section>

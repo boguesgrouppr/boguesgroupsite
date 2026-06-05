@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import NavLink from "@/components/NavLink";
 import { useState } from "react";
 
 interface CardProps {
@@ -70,7 +70,7 @@ export default function Card({
   date,
 }: CardProps) {
   return (
-    <Link href={href} className="group block">
+    <NavLink href={href} className="group block">
       <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 transition-all duration-300 group-hover:-translate-y-1"
           style={{ backgroundColor: '#ffffff', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
         {imageUrl ? (
@@ -98,6 +98,6 @@ export default function Card({
           </p>
         </div>
       </article>
-    </Link>
+    </NavLink>
   );
 }

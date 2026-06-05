@@ -1,4 +1,4 @@
-import Link from "next/link";
+import NavLink from "@/components/NavLink";
 import Hero from "@/components/Hero";
 import ContentRenderer from "@/components/ContentRenderer";
 import { getPage } from "@/lib/content";
@@ -94,7 +94,7 @@ export default function ExtraSqueezeGrantPage() {
                 amplify her work and connect with a wider audience across
                 Charlotte.
               </p>
-              <Link
+              <NavLink
                 href="/blog/extra-squeeze-grant-april-2026-mia-nguyen"
                 className="inline-flex items-center gap-2 rounded bg-[#021f2e] px-5 py-2.5 text-sm font-semibold text-white no-underline transition-colors hover:bg-[#021f2e]/80 hover:text-[#D4AF38]"
               >
@@ -112,7 +112,7 @@ export default function ExtraSqueezeGrantPage() {
                     d="M17 8l4 4m0 0l-4 4m4-4H3"
                   />
                 </svg>
-              </Link>
+              </NavLink>
             </div>
           </div>
         </div>

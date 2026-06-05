@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import NavLink from "@/components/NavLink";
 import {
   getPost,
   getMediaUrl,
@@ -85,7 +85,7 @@ export default async function BlogPostPage({
       {/* Hero / Header */}
       <section className="bg-navy py-16 text-white">
         <div className="mx-auto max-w-4xl px-6">
-          <Link
+          <NavLink
             href="/blog"
             className="mb-6 inline-flex items-center text-sm text-white/70 transition-colors hover:text-gold"
           >
@@ -103,7 +103,7 @@ export default async function BlogPostPage({
               />
             </svg>
             Back to Blog
-          </Link>
+          </NavLink>
           <h1 className="font-heading text-3xl font-bold text-white md:text-4xl lg:text-5xl">
             {stripHtml(post.title.rendered)}
           </h1>

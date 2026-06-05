@@ -1,5 +1,5 @@
 import Hero from "@/components/Hero";
-import Link from "next/link";
+import NavLink from "@/components/NavLink";
 
 export const metadata = {
   title: "Industries We Serve - Bogues Group",
@@ -62,7 +62,7 @@ export default function IndustriesPage() {
       <section className="max-w-6xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {industries.map((industry) => (
-            <Link
+            <NavLink
               key={industry.title}
               href={industry.href}
               className="group block rounded-xl border-t-4 border-gold bg-white p-8 shadow-sm transition-all hover:shadow-lg"
@@ -72,7 +72,7 @@ export default function IndustriesPage() {
               <p className="text-gray-600 leading-relaxed">
                 {industry.description}
               </p>
-            </Link>
+            </NavLink>
           ))}
         </div>
       </section>

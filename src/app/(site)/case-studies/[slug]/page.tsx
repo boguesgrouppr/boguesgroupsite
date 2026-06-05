@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import NavLink from "@/components/NavLink";
 import {
   getAllCaseStudies,
   getCaseStudy,
@@ -72,7 +72,7 @@ export default async function CaseStudyPage({
       {/* Hero / Header */}
       <section className="bg-navy py-16 text-white">
         <div className="mx-auto max-w-4xl px-6">
-          <Link
+          <NavLink
             href="/case-studies"
             className="mb-6 inline-flex items-center text-sm text-white/70 transition-colors hover:text-gold"
           >
@@ -90,7 +90,7 @@ export default async function CaseStudyPage({
               />
             </svg>
             Back to Case Studies
-          </Link>
+          </NavLink>
           <h1 className="font-heading text-3xl font-bold text-white md:text-4xl lg:text-5xl">
             {stripHtml(caseStudy.title.rendered)}
           </h1>

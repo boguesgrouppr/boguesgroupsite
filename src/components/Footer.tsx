@@ -1,4 +1,4 @@
-import Link from "next/link";
+import NavLink from "@/components/NavLink";
 import NewsletterForm from "./NewsletterForm";
 
 const quickLinks = [
@@ -26,9 +26,9 @@ export default function Footer() {
           {/* Company Info */}
           <div>
             <div className="mb-4">
-              <Link href="/">
+              <NavLink href="/">
                 <img src="/logo.png" alt="Bogues Group" className="h-12 w-auto" />
-              </Link>
+              </NavLink>
             </div>
             <p className="text-white/60 text-sm leading-relaxed mb-6">
               North Carolina&apos;s premier public relations firm. Strategic
@@ -79,12 +79,12 @@ export default function Footer() {
             <ul className="space-y-2.5">
               {quickLinks.map((link) => (
                 <li key={link.href}>
-                  <Link
+                  <NavLink
                     href={link.href}
                     className="text-sm text-white/60 hover:text-white transition-colors"
                   >
                     {link.label}
-                  </Link>
+                  </NavLink>
                 </li>
               ))}
             </ul>
@@ -98,12 +98,12 @@ export default function Footer() {
             <ul className="space-y-2.5">
               {serviceLinks.map((link) => (
                 <li key={link.label}>
-                  <Link
+                  <NavLink
                     href={link.href}
                     className="text-sm text-white/60 hover:text-white transition-colors"
                   >
                     {link.label}
-                  </Link>
+                  </NavLink>
                 </li>
               ))}
             </ul>
@@ -148,26 +148,26 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-white/40 text-xs">
             &copy; {new Date().getFullYear()} Bogues Group. All rights reserved.
-            <Link
+            <NavLink
               href="/admin/login"
               className="ml-3 text-white/40 hover:text-white/60 transition-colors"
             >
               Admin Login
-            </Link>
+            </NavLink>
           </p>
           <div className="flex gap-6 text-xs text-white/40">
-            <Link
+            <NavLink
               href="/privacy"
               className="hover:text-white/60 transition-colors"
             >
               Privacy Policy
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               href="/terms"
               className="hover:text-white/60 transition-colors"
             >
               Terms of Service
-            </Link>
+            </NavLink>
           </div>
         </div>
       </div>

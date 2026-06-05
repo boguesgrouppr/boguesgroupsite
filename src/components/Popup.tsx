@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import NavLink from "@/components/NavLink";
 
 export default function Popup() {
   const [visible, setVisible] = useState(false);
@@ -41,7 +41,7 @@ export default function Popup() {
         </button>
 
         {/* Banner image */}
-        <Link href="/small-business-hub" onClick={dismiss}>
+        <NavLink href="/small-business-hub" onClick={dismiss}>
           <Image
             src="/popup-banner.png"
             alt="Grow your small business with Bogues Group"
@@ -50,7 +50,7 @@ export default function Popup() {
             className="w-full h-auto"
             unoptimized
           />
-        </Link>
+        </NavLink>
 
         {/* CTA bar */}
         <div className="bg-[#075E8B] px-8 py-8 text-center">
@@ -59,13 +59,13 @@ export default function Popup() {
           </p>
 
           {/* Subtle animated border button */}
-          <Link
+          <NavLink
             href="/small-business-hub"
             onClick={dismiss}
             className="popup-cta relative inline-block rounded-lg bg-[#D4AF38] px-8 py-4 text-base font-bold text-[#021f2e] transition-all hover:bg-[#e5c256] hover:scale-[1.02]"
           >
             Explore the Small Business Hub
-          </Link>
+          </NavLink>
         </div>
 
         <style jsx>{`

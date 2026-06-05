@@ -2,6 +2,8 @@ import ContactForm from "@/components/ContactForm";
 import Hero from "@/components/Hero";
 import { Suspense } from "react";
 
+export const dynamic = "force-static";
+
 export default function ContactPage() {
   return (
     <div>
