@@ -9,6 +9,9 @@ import {
 import Hero from "@/components/Hero";
 import PressGrid from "./PressGrid";
 
+export const dynamic = "force-static";
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "Press Room - Bogues Group",
   description:

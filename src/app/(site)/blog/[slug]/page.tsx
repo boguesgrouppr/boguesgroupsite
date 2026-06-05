@@ -14,6 +14,9 @@ import PageViewTracker from "@/components/PageViewTracker";
 import { toAbsoluteMediaUrl } from "@/lib/media-url";
 import { supabase } from "@/lib/supabase";
 
+export const dynamic = "force-static";
+export const revalidate = 60;
+
 export async function generateStaticParams() {
   const { data: posts } = await supabase
     .from("blog_posts")

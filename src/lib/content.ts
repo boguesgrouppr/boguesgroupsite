@@ -1,3 +1,4 @@
+import { cache } from "react";
 import pagesData from "@/data/pages.json";
 import caseStudiesData from "@/data/case-studies.json";
 import categoriesData from "@/data/categories.json";
@@ -40,6 +41,17 @@ export interface BlogPost {
   author: number;
 }
 
+interface BlogPostListRow {
+  id: number;
+  slug: string;
+  title: string;
+  excerpt: string;
+  featured_image: string | null;
+  date: string;
+  author: number;
+  categories: number[];
+}
+
 export interface WPCategory {
   id: number;
   name: string;
@@ -64,8 +76,30 @@ export function getMediaAlt(id: number): string {
 
 // --- Blog Posts (from Supabase) ---
 
+function blogPostListRowToWPContent(post: BlogPostListRow): WPContent {
+  const wp: WPContent = {
+    id: post.id,
+    slug: post.slug,
+    date: post.date,
+    title: { rendered: post.title },
+    content: { rendered: "" },
+    excerpt: { rendered: post.excerpt || "" },
+    featured_media: 0,
+    author: post.author,
+    categories: post.categories,
+    link: `/blog/${post.slug}`,
+    _supabaseId: post.id,
+  };
+
+  if (post.featured_image) {
+    wp._featuredImage = toMediaUrl(post.featured_image);
+  }
+
+  return wp;
+}
+
 function blogPostToWPContent(post: BlogPost): WPContent {
-  return {
+  const wp: WPContent = {
     id: post.id,
     slug: post.slug,
     date: post.date,
@@ -78,12 +112,19 @@ function blogPostToWPContent(post: BlogPost): WPContent {
     link: `/blog/${post.slug}`,
     _supabaseId: post.id,
   };
+
+  if (post.featured_image) {
+    wp._featuredImage = toMediaUrl(post.featured_image);
+  }
+
+  return wp;
 }
 
-export async function getAllPosts(): Promise<WPContent[]> {
+/** Listing query — card fields only; avoids loading full post HTML bodies. */
+export const getAllPosts = cache(async (): Promise<WPContent[]> => {
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("*")
+    .select("id, slug, title, excerpt, featured_image, date, author, categories")
     .eq("status", "publish")
     .order("date", { ascending: false });
 
@@ -92,33 +133,23 @@ export async function getAllPosts(): Promise<WPContent[]> {
     return [];
   }
 
-  return (data as BlogPost[]).map((post) => {
-    const wp = blogPostToWPContent(post);
-    // Use featured_image from Supabase if available, otherwise try media map
-    if (post.featured_image) {
-      wp._featuredImage = toMediaUrl(post.featured_image);
-    }
-    return wp;
-  });
-}
+  return (data as BlogPostListRow[]).map(blogPostListRowToWPContent);
+});
 
-export async function getPost(slug: string): Promise<WPContent | undefined> {
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select("*")
-    .eq("slug", slug)
-    .eq("status", "publish")
-    .single();
+export const getPost = cache(
+  async (slug: string): Promise<WPContent | undefined> => {
+    const { data, error } = await supabase
+      .from("blog_posts")
+      .select("*")
+      .eq("slug", slug)
+      .eq("status", "publish")
+      .single();
 
-  if (error || !data) return undefined;
+    if (error || !data) return undefined;
 
-  const post = data as BlogPost;
-  const wp = blogPostToWPContent(post);
-  if (post.featured_image) {
-    wp._featuredImage = toMediaUrl(post.featured_image);
+    return blogPostToWPContent(data as BlogPost);
   }
-  return wp;
-}
+);
 
 // --- Press Articles (filtered by curated slug list) ---
 

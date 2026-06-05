@@ -13,6 +13,9 @@ import {
   formatDate,
 } from "@/lib/content";
 
+export const dynamic = "force-static";
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "Bogues Group - North Carolina's Premier PR Firm",
   description:
