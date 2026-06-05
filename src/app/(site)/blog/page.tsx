@@ -1,7 +1,9 @@
 import { Metadata } from "next";
-import { getAllPosts, getMediaUrl, getMediaAlt, stripHtml, formatDate } from "@/lib/content";
-import Card from "@/components/Card";
+import BlogPostGrid from "@/components/BlogPostGrid";
 import Hero from "@/components/Hero";
+import { createServerActionClient } from "@/lib/supabase/server";
+import { toMediaUrl } from "@/lib/media-url";
+import { formatDate } from "@/lib/content-urls";
 
 export const dynamic = "force-static";
 export const revalidate = 60;
@@ -27,7 +29,18 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogPage() {
-  const posts = await getAllPosts();
+  const supabase = await createServerActionClient();
+  const { data: posts } = await supabase
+    .from("blog_posts")
+    .select("id, slug, title, excerpt, featured_image, date")
+    .eq("status", "publish")
+    .order("date", { ascending: false });
+
+  const mapped = (posts ?? []).map((p) => ({
+    ...p,
+    featured_image: p.featured_image ? toMediaUrl(p.featured_image) : null,
+    date: formatDate(p.date),
+  }));
 
   return (
     <div>
@@ -37,26 +50,7 @@ export default async function BlogPage() {
       />
 
       <section className="mx-auto max-w-7xl px-6 py-16">
-        <p className="mb-8 text-sm text-gray-500">
-          {posts.length} articles
-        </p>
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {posts.map((post) => {
-            const imageUrl = post._featuredImage || getMediaUrl(post.featured_media);
-            return (
-              <Card
-                key={post.id}
-                title={post.title.rendered}
-                excerpt={stripHtml(post.excerpt.rendered)}
-                slug={post.slug}
-                href={`/blog/${post.slug}`}
-                imageUrl={imageUrl}
-                imageAlt={getMediaAlt(post.featured_media)}
-                date={formatDate(post.date)}
-              />
-            );
-          })}
-        </div>
+        <BlogPostGrid posts={mapped} showCount />
       </section>
     </div>
   );

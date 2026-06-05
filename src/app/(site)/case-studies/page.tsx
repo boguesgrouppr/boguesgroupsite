@@ -8,6 +8,8 @@ import {
 import Hero from "@/components/Hero";
 import Card from "@/components/Card";
 
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
   title: "Case Studies - Bogues Group",
   description:

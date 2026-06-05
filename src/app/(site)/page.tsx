@@ -2,16 +2,18 @@ import { Metadata } from "next";
 import NavLink from "@/components/NavLink";
 import Hero from "@/components/Hero";
 import Card from "@/components/Card";
+import HomeBlogPosts from "@/components/HomeBlogPosts";
 import LogoCarousel from "@/components/LogoCarousel";
 import TestimonialCarousel from "@/components/TestimonialCarousel";
 import {
-  getAllPosts,
   getAllCaseStudies,
   getMediaUrl,
   getMediaAlt,
   stripHtml,
-  formatDate,
 } from "@/lib/content";
+import { createServerActionClient } from "@/lib/supabase/server";
+import { toMediaUrl } from "@/lib/media-url";
+import { formatDate } from "@/lib/content-urls";
 
 export const dynamic = "force-static";
 export const revalidate = 60;
@@ -70,8 +72,21 @@ const services = [
 ];
 
 export default async function Home() {
-  const posts = (await getAllPosts()).slice(0, 3);
   const caseStudies = getAllCaseStudies().slice(0, 3);
+
+  const supabase = await createServerActionClient();
+  const { data: posts } = await supabase
+    .from("blog_posts")
+    .select("id, slug, title, excerpt, featured_image, date")
+    .eq("status", "publish")
+    .order("date", { ascending: false })
+    .limit(3);
+
+  const blogPosts = (posts ?? []).map((p) => ({
+    ...p,
+    featured_image: p.featured_image ? toMediaUrl(p.featured_image) : null,
+    date: formatDate(p.date),
+  }));
 
   return (
     <>
@@ -199,23 +214,7 @@ export default async function Home() {
               View All &rarr;
             </NavLink>
           </div>
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {posts.map((post) => {
-              const imageUrl = post._featuredImage || getMediaUrl(post.featured_media);
-              return (
-                <Card
-                  key={post.id}
-                  title={post.title.rendered}
-                  excerpt={stripHtml(post.excerpt.rendered)}
-                  slug={post.slug}
-                  href={`/blog/${post.slug}`}
-                  imageUrl={imageUrl}
-                  imageAlt={getMediaAlt(post.featured_media)}
-                  date={formatDate(post.date)}
-                />
-              );
-            })}
-          </div>
+          <HomeBlogPosts posts={blogPosts} />
           <div className="mt-10 text-center sm:hidden">
             <NavLink
               href="/blog"
