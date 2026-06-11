@@ -2,15 +2,11 @@ import { Metadata } from "next";
 import NavLink from "@/components/NavLink";
 import Hero from "@/components/Hero";
 import Card from "@/components/Card";
+import CaseStudyCard from "@/components/case-studies/CaseStudyCard";
 import HomeBlogPosts from "@/components/HomeBlogPosts";
 import LogoCarousel from "@/components/LogoCarousel";
 import TestimonialCarousel from "@/components/TestimonialCarousel";
-import {
-  getAllCaseStudies,
-  getMediaUrl,
-  getMediaAlt,
-  stripHtml,
-} from "@/lib/content";
+import { getAllCaseStudies } from "@/lib/case-studies";
 import { createServerActionClient } from "@/lib/supabase/server";
 import { toMediaUrl } from "@/lib/media-url";
 import { formatDate } from "@/lib/content-urls";
@@ -72,7 +68,7 @@ const services = [
 ];
 
 export default async function Home() {
-  const caseStudies = getAllCaseStudies().slice(0, 3);
+  const caseStudies = (await getAllCaseStudies()).slice(0, 3);
 
   const supabase = await createServerActionClient();
   const { data: posts } = await supabase
@@ -171,16 +167,8 @@ export default async function Home() {
             </NavLink>
           </div>
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {caseStudies.map((cs) => (
-              <Card
-                key={cs.id}
-                title={cs.title.rendered}
-                excerpt={stripHtml(cs.excerpt.rendered)}
-                slug={cs.slug}
-                href={`/case-studies/${cs.slug}`}
-                imageUrl={getMediaUrl(cs.featured_media)}
-                imageAlt={getMediaAlt(cs.featured_media)}
-              />
+            {caseStudies.map((study) => (
+              <CaseStudyCard key={study.id} study={study} />
             ))}
           </div>
           <div className="mt-10 text-center sm:hidden">

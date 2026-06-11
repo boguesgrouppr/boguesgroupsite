@@ -14,7 +14,7 @@ const serviceLinks = [
   { label: "Media Relations", href: "/services" },
   { label: "Crisis Communications", href: "/services" },
   { label: "Brand Strategy", href: "/services" },
-  { label: "Small Business Hub", href: "#" },
+  { label: "Brand Builder Hub", href: "/brand-builder-hub" },
   { label: "Event PR", href: "/services" },
 ];
 

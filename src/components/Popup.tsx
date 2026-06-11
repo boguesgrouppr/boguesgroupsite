@@ -41,10 +41,10 @@ export default function Popup() {
         </button>
 
         {/* Banner image */}
-        <NavLink href="/small-business-hub" onClick={dismiss}>
+        <NavLink href="/brand-builder-hub" onClick={dismiss}>
           <Image
             src="/popup-banner.png"
-            alt="Grow your small business with Bogues Group"
+            alt="Grow your brand with Bogues Group"
             width={1024}
             height={683}
             className="w-full h-auto"
@@ -55,16 +55,16 @@ export default function Popup() {
         {/* CTA bar */}
         <div className="bg-[#075E8B] px-8 py-8 text-center">
           <p className="text-white text-lg mb-5 font-medium">
-            Expert PR tips and resources for small businesses
+            Expert PR tips and resources to build your brand
           </p>
 
           {/* Subtle animated border button */}
           <NavLink
-            href="/small-business-hub"
+            href="/brand-builder-hub"
             onClick={dismiss}
             className="popup-cta relative inline-block rounded-lg bg-[#D4AF38] px-8 py-4 text-base font-bold text-[#021f2e] transition-all hover:bg-[#e5c256] hover:scale-[1.02]"
           >
-            Explore the Small Business Hub
+            Explore the Brand Builder Hub
           </NavLink>
         </div>
 

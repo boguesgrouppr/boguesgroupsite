@@ -21,7 +21,7 @@ const navItems: NavItem[] = [
   { label: "Work", href: "/case-studies" },
   { label: "Insights", href: "/blog" },
   { label: "Speakers", href: "/speaker-roster" },
-  { label: "Brand Builder Hub", href: "/small-business-hub" },
+  { label: "Brand Builder Hub", href: "/brand-builder-hub" },
   {
     label: "About",
     href: "#",

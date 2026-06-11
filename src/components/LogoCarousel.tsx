@@ -9,9 +9,9 @@ type ClientLogo = {
 };
 
 const clients: ClientLogo[] = [
-  { src: "/logos/yelp-logo.png", alt: "Yelp", href: "/case-studies/yelp" },
+  { src: "/logos/yelp-logo.png", alt: "Yelp", href: "/case-studies/yelp-crown-town-neighborhood-showdown" },
   { src: "/logos/muggsy.png", alt: "Muggsy Bogues", href: "/case-studies/muggsy-bogues-family-foundation" },
-  { src: "/logos/microsoft.png", alt: "Microsoft", href: "/case-studies/microsoft" },
+  { src: "/logos/microsoft.png", alt: "Microsoft", href: "/case-studies/microsoft-youthspark-ai" },
   { src: "/logos/abc-board.png", alt: "Mecklenburg County ABC Board", href: "/case-studies/mecklenburg-county-abc-board" },
   { src: "/logos/frankies.png", alt: "Frankie's Fun Park", href: "/case-studies/frankies-amusement-park" },
   { src: "/logos/communities-in-schools.png", alt: "Communities In Schools", href: "/case-studies/communities-in-schools-charlotte-mecklenburg" },

@@ -3,7 +3,15 @@
 import { supabase } from "@/lib/supabase";
 import { useState } from "react";
 
-export default function NewsletterForm() {
+interface NewsletterFormProps {
+  theme?: "dark" | "light";
+  source?: string;
+}
+
+export default function NewsletterForm({
+  theme = "dark",
+  source = "footer",
+}: NewsletterFormProps) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<
     "idle" | "submitting" | "success" | "duplicate" | "error"
@@ -17,7 +25,7 @@ export default function NewsletterForm() {
 
     const { error } = await supabase
       .from("newsletter_subscribers")
-      .insert({ email, source: "footer" });
+      .insert({ email, source });
 
     if (error) {
       if (error.code === "23505") {
@@ -39,15 +47,25 @@ export default function NewsletterForm() {
     setEmail("");
   }
 
+  const successClass =
+    theme === "dark" ? "text-green-400" : "text-green-600";
+  const duplicateClass = theme === "dark" ? "text-gold" : "text-navy";
+  const inputClass =
+    theme === "dark"
+      ? "flex-1 bg-white/10 border border-white/20 rounded px-3 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-gold"
+      : "flex-1 rounded border border-gray-300 bg-white px-3 py-2 text-sm text-navy placeholder:text-gray-400 focus:border-gold focus:outline-none";
+
   if (status === "success") {
     return (
-      <p className="text-green-400 text-sm font-medium">Subscribed!</p>
+      <p className={`${successClass} text-sm font-medium`}>Subscribed!</p>
     );
   }
 
   if (status === "duplicate") {
     return (
-      <p className="text-gold text-sm font-medium">Already subscribed.</p>
+      <p className={`${duplicateClass} text-sm font-medium`}>
+        Already subscribed.
+      </p>
     );
   }
 
@@ -61,7 +79,7 @@ export default function NewsletterForm() {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Your email"
           required
-          className="flex-1 bg-white/10 border border-white/20 rounded px-3 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-gold"
+          className={inputClass}
         />
         <button
           type="submit"
