@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
+import { supabase } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
-import { supabase } from "@/lib/supabase";
 import { isValidEmail, normalizeEmail } from "@/lib/email";
 import { getBlogDownloadTagName, subscribePdfDownload } from "@/lib/mailchimp";
 
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
 
   const mailchimpResult = await subscribePdfDownload(
     email,
-    getBlogDownloadTagName(),
+    await getBlogDownloadTagName(),
     {
       contentType: "blog",
       slug,

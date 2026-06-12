@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid email address" }, { status: 400 });
   }
 
-  const tagName = getRuntimeEnv("MAILCHIMP_NEWSLETTER_TAG_NAME");
+  const tagName = await getRuntimeEnv("MAILCHIMP_NEWSLETTER_TAG_NAME");
   if (!tagName) {
     return NextResponse.json(
       { error: "Newsletter tag is not configured" },

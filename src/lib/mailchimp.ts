@@ -16,14 +16,22 @@ const REQUIRED_MAILCHIMP_VARS = [
   "MAILCHIMP_LIST_ID",
 ] as const;
 
-function getMissingMailchimpEnvVars(): string[] {
-  return REQUIRED_MAILCHIMP_VARS.filter((name) => !getRuntimeEnv(name));
+async function getMissingMailchimpEnvVars(): Promise<string[]> {
+  const missing: string[] = [];
+
+  for (const name of REQUIRED_MAILCHIMP_VARS) {
+    if (!(await getRuntimeEnv(name))) {
+      missing.push(name);
+    }
+  }
+
+  return missing;
 }
 
-export function getMailchimpConfig(): MailchimpConfig | null {
-  const apiKey = getRuntimeEnv("MAILCHIMP_API_KEY");
-  const serverPrefix = getRuntimeEnv("MAILCHIMP_SERVER_PREFIX");
-  const listId = getRuntimeEnv("MAILCHIMP_LIST_ID");
+export async function getMailchimpConfig(): Promise<MailchimpConfig | null> {
+  const apiKey = await getRuntimeEnv("MAILCHIMP_API_KEY");
+  const serverPrefix = await getRuntimeEnv("MAILCHIMP_SERVER_PREFIX");
+  const listId = await getRuntimeEnv("MAILCHIMP_LIST_ID");
 
   if (!apiKey || !serverPrefix || !listId) {
     return null;
@@ -32,20 +40,20 @@ export function getMailchimpConfig(): MailchimpConfig | null {
   return { apiKey, serverPrefix, listId };
 }
 
-export function getMailchimpConfigError(): string {
-  const missing = getMissingMailchimpEnvVars();
+export async function getMailchimpConfigError(): Promise<string> {
+  const missing = await getMissingMailchimpEnvVars();
   if (missing.length === 0) {
     return "Mailchimp is not configured";
   }
-  return `Mailchimp is not configured. Add these environment variables in Cloudflare (Workers → Settings → Variables and Secrets): ${missing.join(", ")}`;
+  return `Mailchimp is not configured. In Cloudflare → Workers & Pages → boguesgroupsite → Settings → Variables and Secrets, add: ${missing.join(", ")}. Set MAILCHIMP_API_KEY as a Secret. Then redeploy.`;
 }
 
-export function getCaseStudyDownloadTagName(): string {
-  return getRuntimeEnv("MAILCHIMP_CASE_STUDY_DOWNLOAD_TAG_NAME") ?? "case-study-download";
+export async function getCaseStudyDownloadTagName(): Promise<string> {
+  return (await getRuntimeEnv("MAILCHIMP_CASE_STUDY_DOWNLOAD_TAG_NAME")) ?? "case-study-download";
 }
 
-export function getBlogDownloadTagName(): string {
-  return getRuntimeEnv("MAILCHIMP_BLOG_DOWNLOAD_TAG_NAME") ?? "blog-download";
+export async function getBlogDownloadTagName(): Promise<string> {
+  return (await getRuntimeEnv("MAILCHIMP_BLOG_DOWNLOAD_TAG_NAME")) ?? "blog-download";
 }
 
 export function md5EmailHash(email: string): string {
@@ -68,20 +76,20 @@ export interface PdfDownloadContext {
   title: string;
 }
 
-function shouldUseDownloadMergeFields(): boolean {
-  return getRuntimeEnv("MAILCHIMP_DOWNLOAD_MERGE_FIELDS") !== "false";
+async function shouldUseDownloadMergeFields(): Promise<boolean> {
+  return (await getRuntimeEnv("MAILCHIMP_DOWNLOAD_MERGE_FIELDS")) !== "false";
 }
 
-function buildDownloadMergeFields(
+async function buildDownloadMergeFields(
   context: PdfDownloadContext
-): Record<string, string> | undefined {
-  if (!shouldUseDownloadMergeFields()) {
+): Promise<Record<string, string> | undefined> {
+  if (!(await shouldUseDownloadMergeFields())) {
     return undefined;
   }
 
-  const slugTag = getRuntimeEnv("MAILCHIMP_DOWNLOAD_SLUG_MERGE_TAG") ?? "DL_SLUG";
-  const titleTag = getRuntimeEnv("MAILCHIMP_DOWNLOAD_TITLE_MERGE_TAG") ?? "DL_TITLE";
-  const typeTag = getRuntimeEnv("MAILCHIMP_DOWNLOAD_TYPE_MERGE_TAG") ?? "DL_TYPE";
+  const slugTag = (await getRuntimeEnv("MAILCHIMP_DOWNLOAD_SLUG_MERGE_TAG")) ?? "DL_SLUG";
+  const titleTag = (await getRuntimeEnv("MAILCHIMP_DOWNLOAD_TITLE_MERGE_TAG")) ?? "DL_TITLE";
+  const typeTag = (await getRuntimeEnv("MAILCHIMP_DOWNLOAD_TYPE_MERGE_TAG")) ?? "DL_TYPE";
 
   return {
     [slugTag]: context.slug.slice(0, 255),
@@ -175,12 +183,12 @@ export async function subscribeWithTags(
   tagNames: string[],
   mergeFields?: Record<string, string>
 ): Promise<{ ok: true } | { ok: false; status: number; message: string }> {
-  const config = getMailchimpConfig();
+  const config = await getMailchimpConfig();
   if (!config) {
     return {
       ok: false,
       status: 500,
-      message: getMailchimpConfigError(),
+      message: await getMailchimpConfigError(),
     };
   }
 
@@ -201,5 +209,5 @@ export async function subscribePdfDownload(
   tagName: string,
   context: PdfDownloadContext
 ): Promise<{ ok: true } | { ok: false; status: number; message: string }> {
-  return subscribeWithTags(email, [tagName], buildDownloadMergeFields(context));
+  return subscribeWithTags(email, [tagName], await buildDownloadMergeFields(context));
 }
