@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { isValidEmail, normalizeEmail } from "@/lib/email";
 import { subscribeWithTags } from "@/lib/mailchimp";
+import { getRuntimeEnv } from "@/lib/runtime-env";
+
+export const dynamic = "force-dynamic";
 
 interface RequestBody {
   email?: string;
@@ -21,7 +24,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid email address" }, { status: 400 });
   }
 
-  const tagName = process.env.MAILCHIMP_NEWSLETTER_TAG_NAME;
+  const tagName = getRuntimeEnv("MAILCHIMP_NEWSLETTER_TAG_NAME");
   if (!tagName) {
     return NextResponse.json(
       { error: "Newsletter tag is not configured" },

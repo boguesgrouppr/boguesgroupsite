@@ -1,5 +1,6 @@
 import { createHash } from "crypto";
 import { normalizeEmail } from "@/lib/email";
+import { getRuntimeEnv } from "@/lib/runtime-env";
 
 export { isValidEmail } from "@/lib/email";
 
@@ -9,18 +10,20 @@ export interface MailchimpConfig {
   listId: string;
 }
 
+const REQUIRED_MAILCHIMP_VARS = [
+  "MAILCHIMP_API_KEY",
+  "MAILCHIMP_SERVER_PREFIX",
+  "MAILCHIMP_LIST_ID",
+] as const;
+
 function getMissingMailchimpEnvVars(): string[] {
-  const missing: string[] = [];
-  if (!process.env.MAILCHIMP_API_KEY) missing.push("MAILCHIMP_API_KEY");
-  if (!process.env.MAILCHIMP_SERVER_PREFIX) missing.push("MAILCHIMP_SERVER_PREFIX");
-  if (!process.env.MAILCHIMP_LIST_ID) missing.push("MAILCHIMP_LIST_ID");
-  return missing;
+  return REQUIRED_MAILCHIMP_VARS.filter((name) => !getRuntimeEnv(name));
 }
 
 export function getMailchimpConfig(): MailchimpConfig | null {
-  const apiKey = process.env.MAILCHIMP_API_KEY;
-  const serverPrefix = process.env.MAILCHIMP_SERVER_PREFIX;
-  const listId = process.env.MAILCHIMP_LIST_ID;
+  const apiKey = getRuntimeEnv("MAILCHIMP_API_KEY");
+  const serverPrefix = getRuntimeEnv("MAILCHIMP_SERVER_PREFIX");
+  const listId = getRuntimeEnv("MAILCHIMP_LIST_ID");
 
   if (!apiKey || !serverPrefix || !listId) {
     return null;
@@ -34,15 +37,15 @@ export function getMailchimpConfigError(): string {
   if (missing.length === 0) {
     return "Mailchimp is not configured";
   }
-  return `Mailchimp is not configured. Add these environment variables in Cloudflare Pages: ${missing.join(", ")}`;
+  return `Mailchimp is not configured. Add these environment variables in Cloudflare (Workers → Settings → Variables and Secrets): ${missing.join(", ")}`;
 }
 
 export function getCaseStudyDownloadTagName(): string {
-  return process.env.MAILCHIMP_CASE_STUDY_DOWNLOAD_TAG_NAME ?? "case-study-download";
+  return getRuntimeEnv("MAILCHIMP_CASE_STUDY_DOWNLOAD_TAG_NAME") ?? "case-study-download";
 }
 
 export function getBlogDownloadTagName(): string {
-  return process.env.MAILCHIMP_BLOG_DOWNLOAD_TAG_NAME ?? "blog-download";
+  return getRuntimeEnv("MAILCHIMP_BLOG_DOWNLOAD_TAG_NAME") ?? "blog-download";
 }
 
 export function md5EmailHash(email: string): string {
@@ -66,7 +69,7 @@ export interface PdfDownloadContext {
 }
 
 function shouldUseDownloadMergeFields(): boolean {
-  return process.env.MAILCHIMP_DOWNLOAD_MERGE_FIELDS !== "false";
+  return getRuntimeEnv("MAILCHIMP_DOWNLOAD_MERGE_FIELDS") !== "false";
 }
 
 function buildDownloadMergeFields(
@@ -76,9 +79,9 @@ function buildDownloadMergeFields(
     return undefined;
   }
 
-  const slugTag = process.env.MAILCHIMP_DOWNLOAD_SLUG_MERGE_TAG ?? "DL_SLUG";
-  const titleTag = process.env.MAILCHIMP_DOWNLOAD_TITLE_MERGE_TAG ?? "DL_TITLE";
-  const typeTag = process.env.MAILCHIMP_DOWNLOAD_TYPE_MERGE_TAG ?? "DL_TYPE";
+  const slugTag = getRuntimeEnv("MAILCHIMP_DOWNLOAD_SLUG_MERGE_TAG") ?? "DL_SLUG";
+  const titleTag = getRuntimeEnv("MAILCHIMP_DOWNLOAD_TITLE_MERGE_TAG") ?? "DL_TITLE";
+  const typeTag = getRuntimeEnv("MAILCHIMP_DOWNLOAD_TYPE_MERGE_TAG") ?? "DL_TYPE";
 
   return {
     [slugTag]: context.slug.slice(0, 255),
