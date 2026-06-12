@@ -10,6 +10,7 @@ import {
 } from "@/lib/content";
 import ContentRenderer from "@/components/ContentRenderer";
 import FeaturedImage from "@/components/FeaturedImage";
+import BlogPostFooter from "@/components/blog/BlogPostFooter";
 import PageViewTracker from "@/components/PageViewTracker";
 import { toAbsoluteMediaUrl } from "@/lib/media-url";
 import { supabase } from "@/lib/supabase";
@@ -121,6 +122,7 @@ export default async function BlogPostPage({
       {/* Content */}
       <article className="mx-auto max-w-4xl px-6 py-12">
         <ContentRenderer html={post?.content?.rendered ?? ""} />
+        <BlogPostFooter slug={post.slug} hasPdf={Boolean(post._pdfUrl)} />
       </article>
     </div>
   );

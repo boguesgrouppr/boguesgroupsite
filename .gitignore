@@ -12,3 +12,4 @@ dist/
 coverage/
 .env
 .env.local
+tsconfig.tsbuildinfo

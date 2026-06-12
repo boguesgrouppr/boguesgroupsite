@@ -24,6 +24,7 @@ export interface WPContent {
   link: string;
   _featuredImage?: string;
   _supabaseId?: number;
+  _pdfUrl?: string | null;
 }
 
 export interface BlogPost {
@@ -39,6 +40,7 @@ export interface BlogPost {
   tags: number[];
   status: string;
   author: number;
+  pdf_url?: string | null;
 }
 
 interface BlogPostListRow {
@@ -111,6 +113,7 @@ function blogPostToWPContent(post: BlogPost): WPContent {
     categories: post.categories,
     link: `/blog/${post.slug}`,
     _supabaseId: post.id,
+    _pdfUrl: post.pdf_url ?? null,
   };
 
   if (post.featured_image) {
