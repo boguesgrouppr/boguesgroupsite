@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { isValidEmail, normalizeEmail } from "@/lib/email";
+import { closePdfTab, navigatePdfTab, preparePdfTab } from "@/lib/open-pdf-tab";
 
 interface PdfDownloadModalProps {
   isOpen: boolean;
@@ -22,17 +23,22 @@ export default function PdfDownloadModal({
   const descriptionId = useId();
   const emailInputRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
+  const openPdfLinkRef = useRef<HTMLAnchorElement>(null);
 
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [autoOpenFailed, setAutoOpenFailed] = useState(false);
 
   const resetForm = useCallback(() => {
     setEmail("");
     setLoading(false);
     setError(null);
     setSuccess(false);
+    setPdfUrl(null);
+    setAutoOpenFailed(false);
   }, []);
 
   const handleClose = useCallback(() => {
@@ -85,6 +91,11 @@ export default function PdfDownloadModal({
     };
   }, [handleClose, isOpen]);
 
+  useEffect(() => {
+    if (!success || !pdfUrl) return;
+    openPdfLinkRef.current?.focus();
+  }, [pdfUrl, success]);
+
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setError(null);
@@ -94,6 +105,8 @@ export default function PdfDownloadModal({
       setError("Please enter a valid email address.");
       return;
     }
+
+    const popup = preparePdfTab();
 
     setLoading(true);
 
@@ -110,19 +123,20 @@ export default function PdfDownloadModal({
       };
 
       if (!response.ok || !data.pdf_url) {
+        closePdfTab(popup);
         setError(data.error || "Something went wrong. Please try again.");
         setLoading(false);
         return;
       }
 
-      window.open(data.pdf_url, "_blank", "noopener,noreferrer");
+      const opened = navigatePdfTab(popup, data.pdf_url);
+
+      setPdfUrl(data.pdf_url);
+      setAutoOpenFailed(!opened);
       setSuccess(true);
       setLoading(false);
-
-      window.setTimeout(() => {
-        handleClose();
-      }, 1500);
     } catch {
+      closePdfTab(popup);
       setError("Something went wrong. Please try again.");
       setLoading(false);
     }
@@ -174,10 +188,30 @@ export default function PdfDownloadModal({
           Enter your email to receive instant access to the PDF.
         </p>
 
-        {success ? (
-          <p className="mt-6 rounded-lg bg-green-50 px-4 py-3 text-sm font-medium text-green-700">
-            Your download has started!
-          </p>
+        {success && pdfUrl ? (
+          <div className="mt-6 space-y-4">
+            <p className="rounded-lg bg-green-50 px-4 py-3 text-sm font-medium text-green-700">
+              {autoOpenFailed
+                ? "Click the button below to open your PDF."
+                : "Your PDF is opening in a new tab. If it did not open, click below."}
+            </p>
+            <a
+              ref={openPdfLinkRef}
+              href={pdfUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-full items-center justify-center rounded-lg bg-gold px-6 py-3 text-sm font-bold text-[#021f2e] transition-colors hover:bg-[#e5c256]"
+            >
+              Open PDF
+            </a>
+            <button
+              type="button"
+              onClick={handleClose}
+              className="w-full text-center text-sm text-gray-500 transition-colors hover:text-gray-700"
+            >
+              Close
+            </button>
+          </div>
         ) : (
           <form onSubmit={handleSubmit} noValidate className="mt-6 space-y-4">
             <div>
