@@ -9,6 +9,14 @@ export interface MailchimpConfig {
   listId: string;
 }
 
+function getMissingMailchimpEnvVars(): string[] {
+  const missing: string[] = [];
+  if (!process.env.MAILCHIMP_API_KEY) missing.push("MAILCHIMP_API_KEY");
+  if (!process.env.MAILCHIMP_SERVER_PREFIX) missing.push("MAILCHIMP_SERVER_PREFIX");
+  if (!process.env.MAILCHIMP_LIST_ID) missing.push("MAILCHIMP_LIST_ID");
+  return missing;
+}
+
 export function getMailchimpConfig(): MailchimpConfig | null {
   const apiKey = process.env.MAILCHIMP_API_KEY;
   const serverPrefix = process.env.MAILCHIMP_SERVER_PREFIX;
@@ -19,6 +27,14 @@ export function getMailchimpConfig(): MailchimpConfig | null {
   }
 
   return { apiKey, serverPrefix, listId };
+}
+
+export function getMailchimpConfigError(): string {
+  const missing = getMissingMailchimpEnvVars();
+  if (missing.length === 0) {
+    return "Mailchimp is not configured";
+  }
+  return `Mailchimp is not configured. Add these environment variables in Cloudflare Pages: ${missing.join(", ")}`;
 }
 
 export function getCaseStudyDownloadTagName(): string {
@@ -161,7 +177,7 @@ export async function subscribeWithTags(
     return {
       ok: false,
       status: 500,
-      message: "Mailchimp is not configured",
+      message: getMailchimpConfigError(),
     };
   }
 
