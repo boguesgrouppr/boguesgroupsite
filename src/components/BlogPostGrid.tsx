@@ -5,7 +5,7 @@ export interface BlogPostRow {
   id: number;
   slug: string;
   title: string;
-  excerpt: string;
+  excerpt: string | null;
   featured_image: string | null;
   date: string;
 }

@@ -103,7 +103,8 @@ export function resolveFullImageSrc(url: string): string {
   return toMediaUrl(url);
 }
 
-export function stripHtml(html: string): string {
+export function stripHtml(html: string | null | undefined): string {
+  if (!html) return "";
   return html
     .replace(/<[^>]*>/g, "")
     .replace(/&amp;/g, "&")
