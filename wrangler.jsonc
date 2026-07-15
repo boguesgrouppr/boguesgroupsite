@@ -8,6 +8,10 @@
     "nodejs_compat_populate_process_env",
     "global_fetch_strictly_public"
   ],
+  "vars": {
+    "MAILCHIMP_LIST_ID": "7ccd0c1972",
+    "MAILCHIMP_SERVER_PREFIX": "us5"
+  },
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
