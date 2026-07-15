@@ -3,12 +3,14 @@ import { notFound } from "next/navigation";
 import NavLink from "@/components/NavLink";
 import CaseStudyPdfDownload from "@/components/case-studies/CaseStudyPdfDownload";
 import VimeoEmbed from "@/components/case-studies/VimeoEmbed";
+import JsonLd from "@/components/JsonLd";
 import {
   getCaseStudy,
   getCategoryLabel,
   getPublishedCaseStudySlugs,
 } from "@/lib/case-studies";
-import { toAbsoluteMediaUrl } from "@/lib/media-url";
+import { getSiteOrigin, toAbsoluteMediaUrl } from "@/lib/media-url";
+import { BOGUES_ORGANIZATION } from "@/lib/structured-data";
 
 export const revalidate = 60;
 export const dynamicParams = true;
@@ -58,8 +60,10 @@ function ContentSection({
   body,
 }: {
   title: string;
-  body: string;
+  body: string | null | undefined;
 }) {
+  if (!body) return null;
+  
   const paragraphs = body
     .split(/\n{2,}/)
     .map((paragraph) => paragraph.trim())
@@ -93,9 +97,48 @@ export default async function CaseStudyPage({
   }
 
   const hasCta = Boolean(caseStudy.cta_label && caseStudy.cta_url);
+  const pageUrl = `${getSiteOrigin()}/case-studies/${slug}`;
+  const imageUrl = toAbsoluteMediaUrl(caseStudy.cover_image_url ?? "");
+  const description =
+    caseStudy.short_description?.slice(0, 160) ??
+    `Case study: ${caseStudy.title}`;
+
+  const schemas: Record<string, unknown>[] = [
+    {
+      "@type": "Article",
+      headline: caseStudy.title,
+      description,
+      articleSection: "Case Study",
+      about: caseStudy.client,
+      datePublished: caseStudy.created_at,
+      dateModified: caseStudy.updated_at,
+      author: BOGUES_ORGANIZATION,
+      publisher: BOGUES_ORGANIZATION,
+      mainEntityOfPage: pageUrl,
+      url: pageUrl,
+      ...(imageUrl ? { image: [imageUrl] } : {}),
+    },
+  ];
+
+  if (caseStudy.testimonial) {
+    schemas.push({
+      "@type": "Review",
+      reviewBody: caseStudy.testimonial,
+      author: {
+        "@type": "Person",
+        name: caseStudy.testimonial_author ?? "Client",
+      },
+      itemReviewed: {
+        "@type": "Organization",
+        name: caseStudy.client,
+      },
+      publisher: BOGUES_ORGANIZATION,
+    });
+  }
 
   return (
     <div>
+      <JsonLd data={schemas} />
       <section className="bg-navy py-16 text-white">
         <div className="mx-auto max-w-5xl px-6">
           <NavLink

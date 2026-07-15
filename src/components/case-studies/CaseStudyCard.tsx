@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import NavLink from "@/components/NavLink";
 import {
   getCategoryTabLabel,
@@ -23,9 +24,11 @@ function CaseStudyCardImage({
   if (error) {
     return (
       <div className="relative flex h-48 w-full items-center justify-center overflow-hidden bg-[#075E8B]/10">
-        <img
+        <Image
           src="/logo.png"
           alt="Bogues Group"
+          width={48}
+          height={48}
           className="h-12 w-auto opacity-40"
         />
       </div>
@@ -34,11 +37,12 @@ function CaseStudyCardImage({
 
   return (
     <div className="relative h-48 w-full overflow-hidden bg-gray-100">
-      <img
+      <Image
         src={imageUrl}
         alt={title}
-        className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-        loading="lazy"
+        fill
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
         onError={() => setError(true)}
       />
     </div>
@@ -56,9 +60,11 @@ export default function CaseStudyCard({ study }: CaseStudyCardProps) {
           />
         ) : (
           <div className="relative flex h-48 w-full items-center justify-center overflow-hidden bg-[#075E8B]/10">
-            <img
+            <Image
               src="/logo.png"
               alt="Bogues Group"
+              width={48}
+              height={48}
               className="h-12 w-auto opacity-40"
             />
           </div>

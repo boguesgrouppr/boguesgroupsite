@@ -1,12 +1,11 @@
 import { cache } from "react";
 import pagesData from "@/data/pages.json";
-import caseStudiesData from "@/data/case-studies.json";
-import categoriesData from "@/data/categories.json";
-import mediaLookup from "@/data/media-lookup.json";
 import pressSlugsData from "@/data/press-slugs.json";
+import mediaLookup from "@/data/media-lookup.json";
 import { rewriteContentUrls, stripHtml, formatDate } from "./content-urls";
 import { toMediaUrl } from "./media-url";
 import { supabase } from "./supabase";
+import { getServiceContent } from "@/data/service-content";
 
 export { rewriteContentUrls, stripHtml, formatDate } from "./content-urls";
 
@@ -32,14 +31,14 @@ export interface BlogPost {
   wp_id: number | null;
   slug: string;
   title: string;
-  content: string;
-  excerpt: string;
+  content: string | null;
+  excerpt: string | null;
   featured_image: string | null;
-  date: string;
-  categories: number[];
-  tags: number[];
+  date: string | null;
+  categories: number[] | null;
+  tags: number[] | null;
   status: string;
-  author: number;
+  author: number | null;
   pdf_url?: string | null;
 }
 
@@ -47,23 +46,15 @@ interface BlogPostListRow {
   id: number;
   slug: string;
   title: string;
-  excerpt: string;
+  excerpt: string | null;
   featured_image: string | null;
-  date: string;
-  author: number;
-  categories: number[];
-}
-
-export interface WPCategory {
-  id: number;
-  name: string;
-  slug: string;
-  count: number;
+  date: string | null;
+  author: number | null;
+  categories: number[] | null;
 }
 
 const pages = pagesData as WPContent[];
-const caseStudies = caseStudiesData as WPContent[];
-const categories = categoriesData as WPCategory[];
+const pressSlugs = new Set(pressSlugsData as string[]);
 const mediaById = mediaLookup as Record<string, string[]>;
 
 export function getMediaUrl(id: number): string | null {
@@ -81,15 +72,15 @@ export function getMediaAlt(id: number): string {
 function blogPostListRowToWPContent(post: BlogPostListRow): WPContent {
   const wp: WPContent = {
     id: post.id,
-    slug: post.slug,
-    date: post.date,
-    title: { rendered: post.title },
+    slug: post.slug ?? "",
+    date: post.date ?? new Date().toISOString(),
+    title: { rendered: post.title ?? "" },
     content: { rendered: "" },
-    excerpt: { rendered: post.excerpt || "" },
+    excerpt: { rendered: post.excerpt ?? "" },
     featured_media: 0,
-    author: post.author,
-    categories: post.categories,
-    link: `/blog/${post.slug}`,
+    author: post.author ?? 0,
+    categories: post.categories ?? [],
+    link: `/blog/${post.slug ?? ""}`,
     _supabaseId: post.id,
   };
 
@@ -103,15 +94,15 @@ function blogPostListRowToWPContent(post: BlogPostListRow): WPContent {
 function blogPostToWPContent(post: BlogPost): WPContent {
   const wp: WPContent = {
     id: post.id,
-    slug: post.slug,
-    date: post.date,
-    title: { rendered: post.title },
-    content: { rendered: rewriteContentUrls(post.content) },
-    excerpt: { rendered: post.excerpt || "" },
+    slug: post.slug ?? "",
+    date: post.date ?? new Date().toISOString(),
+    title: { rendered: post.title ?? "" },
+    content: { rendered: rewriteContentUrls(post.content ?? "") },
+    excerpt: { rendered: post.excerpt ?? "" },
     featured_media: 0,
-    author: post.author,
-    categories: post.categories,
-    link: `/blog/${post.slug}`,
+    author: post.author ?? 0,
+    categories: post.categories ?? [],
+    link: `/blog/${post.slug ?? ""}`,
     _supabaseId: post.id,
     _pdfUrl: post.pdf_url ?? null,
   };
@@ -156,8 +147,6 @@ export const getPost = cache(
 
 // --- Press Articles (filtered by curated slug list) ---
 
-const pressSlugs = new Set(pressSlugsData as string[]);
-
 export async function getPressPosts(): Promise<WPContent[]> {
   const allPosts = await getAllPosts();
   return allPosts.filter((post) => pressSlugs.has(post.slug));
@@ -166,30 +155,10 @@ export async function getPressPosts(): Promise<WPContent[]> {
 // --- Pages (still from static JSON) ---
 
 export function getPage(slug: string): WPContent | undefined {
-  return pages.find((p) => p.slug === slug);
+  const page = pages.find((p) => p.slug === slug);
+  const serviceContent = getServiceContent(slug);
+
+  return page && serviceContent
+    ? { ...page, content: { ...page.content, rendered: serviceContent } }
+    : page;
 }
-
-export function getAllPages(): WPContent[] {
-  return pages;
-}
-
-// --- Case Studies (still from static JSON) ---
-
-export function getAllCaseStudies(): WPContent[] {
-  return caseStudies;
-}
-
-export function getCaseStudy(slug: string): WPContent | undefined {
-  return caseStudies.find((cs) => cs.slug === slug);
-}
-
-// --- Categories ---
-
-export function getAllCategories(): WPCategory[] {
-  return categories;
-}
-
-export function getCategoryName(id: number): string {
-  return categories.find((c) => c.id === id)?.name || "Uncategorized";
-}
-

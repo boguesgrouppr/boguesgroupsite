@@ -56,10 +56,10 @@ function normalizeCoverImage(url: string | null): string | null {
 
 function mapRow(row: Record<string, unknown>): CaseStudy {
   return {
-    id: String(row.id),
-    slug: row.slug as string,
-    title: row.title as string,
-    client: row.client as string,
+    id: String(row.id ?? ""),
+    slug: (row.slug as string) ?? "",
+    title: (row.title as string) ?? "",
+    client: (row.client as string) ?? "",
     categories: parseCategories(row.categories),
     industry_tags: parseIndustryTags(row.industry_tags),
     short_description: (row.short_description as string | null) ?? null,

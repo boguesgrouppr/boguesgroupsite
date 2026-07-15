@@ -1,15 +1,13 @@
-import Hero from "@/components/Hero";
-import ContentRenderer from "@/components/ContentRenderer";
-import { getPage } from "@/lib/content";
+import AboutContent from "@/components/pages/AboutContent";
 
 export const metadata = {
   title: "About Us - Bogues Group",
   description:
-    "Learn about Bogues Group, North Carolina's premier public relations firm delivering strategic communications and brand storytelling.",
+    "Learn about Bogues Group, North Carolina's premier strategic communications and marketing agency. Meet our team, board of advisors, and discover our values.",
   openGraph: {
     title: "About Us - Bogues Group",
     description:
-      "Learn about Bogues Group, North Carolina's premier public relations firm delivering strategic communications and brand storytelling.",
+      "Learn about Bogues Group, North Carolina's premier strategic communications and marketing agency.",
     type: "website",
     siteName: "Bogues Group",
     url: "/about",
@@ -18,26 +16,10 @@ export const metadata = {
     card: "summary_large_image",
     title: "About Us - Bogues Group",
     description:
-      "Learn about Bogues Group, North Carolina's premier public relations firm delivering strategic communications and brand storytelling.",
+      "Learn about Bogues Group, North Carolina's premier strategic communications and marketing agency.",
   },
 };
 
 export default function AboutPage() {
-  const page = getPage("about-us");
-
-  return (
-    <>
-      <Hero
-        title="About Us"
-        subtitle="North Carolina's Premier PR Firm"
-      />
-      <section className="max-w-4xl mx-auto px-6 py-16">
-        {page ? (
-          <ContentRenderer html={page.content.rendered} />
-        ) : (
-          <p className="text-gray-500 text-center">Content coming soon.</p>
-        )}
-      </section>
-    </>
-  );
+  return <AboutContent />;
 }

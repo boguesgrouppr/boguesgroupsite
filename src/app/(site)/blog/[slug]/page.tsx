@@ -10,9 +10,11 @@ import {
 } from "@/lib/content";
 import ContentRenderer from "@/components/ContentRenderer";
 import FeaturedImage from "@/components/FeaturedImage";
+import JsonLd from "@/components/JsonLd";
 import BlogPostFooter from "@/components/blog/BlogPostFooter";
 import PageViewTracker from "@/components/PageViewTracker";
-import { toAbsoluteMediaUrl } from "@/lib/media-url";
+import { getSiteOrigin, toAbsoluteMediaUrl } from "@/lib/media-url";
+import { BOGUES_ORGANIZATION } from "@/lib/structured-data";
 import { supabase } from "@/lib/supabase";
 
 export const dynamic = "force-static";
@@ -77,9 +79,27 @@ export default async function BlogPostPage({
   const imageUrl =
     post._featuredImage || getMediaUrl(post.featured_media) || "";
   const imageAlt = getMediaAlt(post.featured_media);
+  const title = stripHtml(post.title.rendered);
+  const description = stripHtml(post.excerpt.rendered).slice(0, 160);
+  const pageUrl = `${getSiteOrigin()}/blog/${slug}`;
+  const absoluteImageUrl = toAbsoluteMediaUrl(imageUrl);
+
+  const blogPostingSchema = {
+    "@type": "BlogPosting",
+    headline: title,
+    description,
+    datePublished: post.date,
+    dateModified: post.date,
+    author: BOGUES_ORGANIZATION,
+    publisher: BOGUES_ORGANIZATION,
+    mainEntityOfPage: pageUrl,
+    url: pageUrl,
+    ...(absoluteImageUrl ? { image: [absoluteImageUrl] } : {}),
+  };
 
   return (
     <div>
+      <JsonLd data={blogPostingSchema} />
       {post._supabaseId && (
         <PageViewTracker postId={post._supabaseId} path={`/blog/${slug}`} />
       )}
@@ -106,7 +126,7 @@ export default async function BlogPostPage({
             Back to Blog
           </NavLink>
           <h1 className="font-heading text-3xl font-bold text-white md:text-4xl lg:text-5xl">
-            {stripHtml(post.title.rendered)}
+            {title}
           </h1>
           <time className="mt-4 block text-white/70">
             {formatDate(post.date)}
