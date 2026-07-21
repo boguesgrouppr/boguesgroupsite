@@ -42,6 +42,13 @@ const socialLinks = [
     ),
   },
   {
+    label: "YouTube",
+    href: "https://www.youtube.com/@boguesgroup9706",
+    icon: (
+      <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+    ),
+  },
+  {
     label: "X",
     href: "https://x.com/BoguesGroup",
     icon: (
@@ -59,7 +66,13 @@ export default function Footer() {
           <div>
             <div className="mb-4">
               <NavLink href="/">
-                <Image src="/logo.png" alt="Bogues Group" width={160} height={48} className="h-12 w-auto" />
+                <Image
+                  src="/logo.png"
+                  alt="Bogues Group"
+                  width={160}
+                  height={48}
+                  className="h-12 w-auto"
+                />
               </NavLink>
             </div>
             <p className="text-white/60 text-sm leading-relaxed mb-6">
@@ -76,7 +89,11 @@ export default function Footer() {
                   className="text-white/40 hover:text-gold transition-colors"
                   aria-label={social.label}
                 >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <svg
+                    className="w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
                     {social.icon}
                   </svg>
                 </a>
@@ -128,21 +145,33 @@ export default function Footer() {
               Get in Touch
             </h4>
             <div className="space-y-3 text-sm text-white/60 mb-6">
-              <p>8022 Providence Rd, STE 500-178<br />Charlotte, NC 28277</p>
               <p>
-                <a href="mailto:info@boguesgroup.com" className="hover:text-white transition-colors">
+                8022 Providence Rd, STE 500-178
+                <br />
+                Charlotte, NC 28277
+              </p>
+              <p>
+                <a
+                  href="mailto:info@boguesgroup.com"
+                  className="hover:text-white transition-colors"
+                >
                   info@boguesgroup.com
                 </a>
               </p>
               <p>
-                <a href="tel:+19106340054" className="hover:text-white transition-colors">
+                <a
+                  href="tel:+19106340054"
+                  className="hover:text-white transition-colors"
+                >
                   (910) 634-0054
                 </a>
               </p>
             </div>
 
             <div>
-              <h4 className="text-white text-sm font-semibold mb-2">Stay Updated</h4>
+              <h4 className="text-white text-sm font-semibold mb-2">
+                Stay Updated
+              </h4>
               <NewsletterForm />
             </div>
           </div>
@@ -152,15 +181,24 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-white/40 text-xs">
             &copy; {new Date().getFullYear()} Bogues Group. All rights reserved.
-            <NavLink href="/admin/login" className="ml-3 text-white/40 hover:text-white/60 transition-colors">
+            <NavLink
+              href="/admin/login"
+              className="ml-3 text-white/40 hover:text-white/60 transition-colors"
+            >
               Admin Login
             </NavLink>
           </p>
           <div className="flex gap-6 text-xs text-white/40">
-            <NavLink href="/privacy" className="hover:text-white/60 transition-colors">
+            <NavLink
+              href="/privacy"
+              className="hover:text-white/60 transition-colors"
+            >
               Privacy Policy
             </NavLink>
-            <NavLink href="/terms" className="hover:text-white/60 transition-colors">
+            <NavLink
+              href="/terms"
+              className="hover:text-white/60 transition-colors"
+            >
               Terms of Service
             </NavLink>
           </div>
