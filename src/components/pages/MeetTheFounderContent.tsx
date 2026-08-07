@@ -16,7 +16,7 @@ interface FounderBio {
   leadershipPhilosophy: string;
   careerHighlights: string[];
   beyondBoguesGroup: string;
-  featuredIn: string[];
+  featuredIn: { src: string; name: string }[];
 }
 
 const founderBio: FounderBio = {
@@ -47,13 +47,13 @@ Her leadership philosophy is simple: combine strategic thinking with authentic r
 
 When she's not working with clients, you'll likely find her reading, traveling, working out, discovering new music, or spending time with friends and family.`,
   featuredIn: [
-    "/logos/time.png",
-    "/logos/forbes.jpeg",
-    "/logos/espn.png",
-    "/logos/cnn.png",
-    "/logos/USA_today.png",
-    "/logos/gq.png",
-    "/logos/huffington.jpeg",
+    { src: "/logos/time.png", name: "TIME" },
+    { src: "/logos/forbes.jpeg", name: "Forbes" },
+    { src: "/logos/espn.png", name: "ESPN" },
+    { src: "/logos/cnn.png", name: "CNN" },
+    { src: "/logos/USA_today.png", name: "USA Today" },
+    { src: "/logos/gq.png", name: "GQ" },
+    { src: "/logos/huffington.jpeg", name: "The Huffington Post" },
   ],
 };
 
@@ -142,13 +142,18 @@ export default function MeetTheFounderContent() {
         {/* Intro */}
         <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
           <div className="relative overflow-hidden rounded-2xl bg-navy p-3 shadow-xl">
-            <img
-              src={brittneyImage}
-              alt="Brittney Bogues, Founder and Chief Innovation Officer"
-              className="aspect-[4/5] w-full rounded-xl object-cover object-top"
-            />
+            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-xl">
+              <Image
+                src={brittneyImage}
+                alt="Brittney Bogues, Founder and Chief Innovation Officer of Bogues Group"
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 40vw"
+                className="object-cover object-top"
+              />
+            </div>
             <div className="absolute bottom-7 left-7 rounded-xl bg-white px-6 py-5 shadow-lg">
-              <img src="/logo.png" alt="Bogues Group" className="h-14 w-auto" />
+              <Image src="/logo.png" alt="Bogues Group" width={125} height={118} className="h-14 w-auto" />
             </div>
           </div>
           <div className="prose prose-lg max-w-none text-body">
@@ -171,9 +176,11 @@ export default function MeetTheFounderContent() {
         {/* Leadership Philosophy */}
         <div className="mt-16 rounded-2xl border border-gold/20 bg-[#f8f6f0] p-8 md:p-10 relative overflow-hidden">
           <div className="absolute -right-8 -top-8 opacity-[0.06]">
-            <img
+            <Image
               src="/logo.png"
               alt=""
+              width={125}
+              height={118}
               className="h-40 w-auto"
               aria-hidden="true"
             />
@@ -193,9 +200,11 @@ export default function MeetTheFounderContent() {
               Experience & Recognition
             </h2>
             <div className="hidden sm:flex items-center gap-2 rounded-full bg-gray-100 px-4 py-1.5">
-              <img
+              <Image
                 src="/logo.png"
                 alt=""
+                width={125}
+                height={118}
                 className="h-4 w-auto opacity-60"
                 aria-hidden="true"
               />
@@ -243,8 +252,8 @@ export default function MeetTheFounderContent() {
             {/* Note: GC in source doc treated as likely typo for GQ per earlier PR mentions */}
           </p>
           <div className="mt-8 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-            {founderBio.featuredIn.map((logo) => (
-              <FeaturedLogo key={logo} name={logo} logo={logo} />
+            {founderBio.featuredIn.map((pub) => (
+              <FeaturedLogo key={pub.src} name={pub.name} logo={pub.src} />
             ))}
           </div>
         </div>

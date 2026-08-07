@@ -12,6 +12,7 @@ interface CardProps {
   imageUrl?: string | null;
   imageAlt?: string;
   date?: string;
+  priority?: boolean;
 }
 
 function decodeHtmlEntities(text: string): string {
@@ -31,15 +32,25 @@ function decodeHtmlEntities(text: string): string {
     .replace(/&apos;/g, "'");
 }
 
-function CardImage({ imageUrl, imageAlt }: { imageUrl: string; imageAlt: string }) {
+function CardImage({
+  imageUrl,
+  imageAlt,
+  priority = false,
+}: {
+  imageUrl: string;
+  imageAlt: string;
+  priority?: boolean;
+}) {
   const [error, setError] = useState(false);
 
   if (error) {
     return (
       <div className="relative w-full h-48 overflow-hidden bg-[#075E8B]/10 flex items-center justify-center">
-        <img
+        <Image
           src="/logo.png"
           alt="Bogues Group"
+          width={125}
+          height={118}
           className="h-12 w-auto opacity-40"
         />
       </div>
@@ -53,6 +64,7 @@ function CardImage({ imageUrl, imageAlt }: { imageUrl: string; imageAlt: string 
         alt={imageAlt}
         fill
         unoptimized
+        priority={priority}
         className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         onError={() => setError(true)}
@@ -68,18 +80,21 @@ export default function Card({
   imageUrl,
   imageAlt = "",
   date,
+  priority = false,
 }: CardProps) {
   return (
     <NavLink href={href} className="group block">
       <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 transition-all duration-300 group-hover:-translate-y-1"
           style={{ backgroundColor: '#ffffff', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
         {imageUrl ? (
-          <CardImage imageUrl={imageUrl} imageAlt={imageAlt} />
+          <CardImage imageUrl={imageUrl} imageAlt={imageAlt} priority={priority} />
         ) : (
           <div className="relative w-full h-48 overflow-hidden bg-[#075E8B]/10 flex items-center justify-center">
-            <img
+            <Image
               src="/logo.png"
               alt="Bogues Group"
+              width={125}
+              height={118}
               className="h-12 w-auto opacity-40"
             />
           </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import Image from "next/image";
 import NavLink from "@/components/NavLink";
 import { usePathname } from "next/navigation";
 
@@ -178,9 +179,11 @@ export default function Header() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <NavLink href="/" className="shrink-0">
-            <img
+            <Image
               src="/logo.png"
               alt="Bogues Group"
+              width={125}
+              height={118}
               className="h-14 w-auto"
             />
           </NavLink>

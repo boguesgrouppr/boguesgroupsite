@@ -70,8 +70,8 @@ export default function Footer() {
                 <Image
                   src="/logo.png"
                   alt="Bogues Group"
-                  width={160}
-                  height={48}
+                  width={125}
+                  height={118}
                   className="h-12 w-auto"
                 />
               </NavLink>

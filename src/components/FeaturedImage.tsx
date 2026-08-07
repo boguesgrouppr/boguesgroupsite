@@ -18,9 +18,11 @@ export default function FeaturedImage({ src, alt, priority = false }: FeaturedIm
     return (
       <div className="mx-auto max-w-4xl px-6">
         <div className="relative -mt-8 overflow-hidden rounded-lg shadow-xl bg-[#075E8B]/10 flex items-center justify-center py-12">
-          <img
+          <Image
             src="/logo.png"
             alt="Bogues Group"
+            width={125}
+            height={118}
             className="h-16 w-auto opacity-40"
           />
         </div>
