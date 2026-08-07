@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import CaseStudyCard from "@/components/case-studies/CaseStudyCard";
+import { isPriorityImage } from "@/lib/image-priority";
 import {
   CASE_STUDY_TABS,
   type CaseStudy,
@@ -78,8 +79,12 @@ export default function CaseStudiesClient({
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((study) => (
-            <CaseStudyCard key={study.id} study={study} />
+          {filtered.map((study, index) => (
+            <CaseStudyCard
+              key={study.id}
+              study={study}
+              priority={isPriorityImage(index)}
+            />
           ))}
         </div>
       )}

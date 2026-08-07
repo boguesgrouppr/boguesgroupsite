@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 
 interface Testimonial {
@@ -106,9 +107,11 @@ export default function TestimonialCarousel() {
 
             <div className="mt-8 flex items-center justify-center gap-3">
               {t.image ? (
-                <img
+                <Image
                   src={t.image}
                   alt={t.name}
+                  width={48}
+                  height={48}
                   className="h-12 w-12 rounded-full object-cover ring-2 ring-[#D4AF38]/50"
                 />
               ) : (

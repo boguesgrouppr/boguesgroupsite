@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import NavLink from "@/components/NavLink";
 import CaseStudyPdfDownload from "@/components/case-studies/CaseStudyPdfDownload";
 import VimeoEmbed from "@/components/case-studies/VimeoEmbed";
@@ -192,9 +193,16 @@ export default async function CaseStudyPage({
 
           {caseStudy.cover_image_url && (
             <div className="relative mt-8 aspect-[16/9] overflow-hidden rounded-xl shadow-xl">
-              <img
+              <Image
                 src={caseStudy.cover_image_url}
-                alt={caseStudy.title}
+                alt={
+                  caseStudy.client
+                    ? `${caseStudy.client} — ${caseStudy.title}`
+                    : caseStudy.title
+                }
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 1024px"
                 className="absolute inset-0 h-full w-full object-cover"
               />
             </div>

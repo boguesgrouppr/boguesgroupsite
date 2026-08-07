@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, type FormEvent } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -83,9 +84,11 @@ export default function AdminLogin() {
       <div className="w-full max-w-md">
         {/* Branding */}
         <div className="mb-8 text-center">
-          <img
+          <Image
             src="/logo.png"
             alt="Bogues Group"
+            width={125}
+            height={118}
             className="mx-auto mb-4 h-12 w-auto"
           />
           <h1 className="text-2xl font-bold text-navy">Admin Portal</h1>

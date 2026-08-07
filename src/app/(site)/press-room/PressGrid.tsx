@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Card from "@/components/Card";
+import { isPriorityImage } from "@/lib/image-priority";
 
 interface PressArticle {
   id: number;
@@ -62,7 +63,7 @@ export default function PressGrid({ articles }: { articles: PressArticle[] }) {
 
       {/* Grid */}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((article) => (
+        {filtered.map((article, index) => (
           <Card
             key={article.id}
             title={article.title}
@@ -72,6 +73,7 @@ export default function PressGrid({ articles }: { articles: PressArticle[] }) {
             imageUrl={article.imageUrl}
             imageAlt={article.imageAlt}
             date={article.date}
+            priority={isPriorityImage(index)}
           />
         ))}
       </div>

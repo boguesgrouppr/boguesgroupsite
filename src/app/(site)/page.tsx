@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase";
 import { getAllCaseStudies } from "@/lib/case-studies";
 import { toMediaUrl } from "@/lib/media-url";
 import { stripHtml } from "@/lib/content-urls";
+import { isPriorityImage } from "@/lib/image-priority";
 import type { CaseStudy, CaseStudyCategory } from "@/lib/case-studies-shared";
 import { getCategoryTabLabel } from "@/lib/case-studies-shared";
 import {
@@ -113,6 +114,8 @@ type ClientLogo = {
   src: string;
   alt: string;
   href?: string;
+  width: number;
+  height: number;
 };
 
 const clients: ClientLogo[] = [
@@ -120,39 +123,51 @@ const clients: ClientLogo[] = [
     src: "/logos/yelp-logo.png",
     alt: "Yelp",
     href: "/case-studies/yelp-crown-town-neighborhood-showdown",
+    width: 1200,
+    height: 484,
   },
   {
     src: "/logos/muggsy.png",
     alt: "Muggsy Bogues",
     href: "/case-studies/muggsy-bogues-family-foundation",
+    width: 500,
+    height: 108,
   },
   {
     src: "/logos/microsoft.png",
     alt: "Microsoft",
     href: "/case-studies/microsoft-youthspark-ai",
+    width: 216,
+    height: 46,
   },
   {
     src: "/logos/abc-board.png",
     alt: "Mecklenburg County ABC Board",
     href: "/case-studies/mecklenburg-county-abc-board",
+    width: 458,
+    height: 350,
   },
   {
     src: "/logos/frankies.png",
     alt: "Frankie's Fun Park",
     href: "/case-studies/frankies-amusement-park",
+    width: 200,
+    height: 200,
   },
   {
     src: "/logos/communities-in-schools.png",
     alt: "Communities In Schools",
     href: "/case-studies/communities-in-schools-charlotte-mecklenburg",
+    width: 200,
+    height: 200,
   },
-  { src: "/logos/Kraft.PNG", alt: "Kraft", href: "/case-studies/kraft" },
-  { src: "/logos/american_express.PNG", alt: "American Express" },
-  { src: "/logos/capital_one.PNG", alt: "Capital One" },
-  { src: "/logos/charlotte_crown.PNG", alt: "Charlotte Crown" },
-  { src: "/logos/charlotte_hornets.JPG", alt: "Charlotte Hornets" },
-  { src: "/logos/crva.PNG", alt: "CRVA" },
-  { src: "/logos/toronto_raptors.PNG", alt: "Toronto Raptors" },
+  { src: "/logos/Kraft.PNG", alt: "Kraft", href: "/case-studies/kraft", width: 3840, height: 2160 },
+  { src: "/logos/american_express.PNG", alt: "American Express", width: 225, height: 224 },
+  { src: "/logos/capital_one.PNG", alt: "Capital One", width: 4096, height: 4096 },
+  { src: "/logos/charlotte_crown.PNG", alt: "Charlotte Crown", width: 319, height: 313 },
+  { src: "/logos/charlotte_hornets.JPG", alt: "Charlotte Hornets", width: 228, height: 221 },
+  { src: "/logos/crva.PNG", alt: "CRVA", width: 512, height: 266 },
+  { src: "/logos/toronto_raptors.PNG", alt: "Toronto Raptors", width: 225, height: 225 },
 ];
 
 interface NewsFeedItem {
@@ -237,7 +252,17 @@ function StatCard({
   );
 }
 
-function CaseStudyHighlightCard({ study }: { study: CaseStudy }) {
+function CaseStudyHighlightCard({
+  study,
+  priority = false,
+}: {
+  study: CaseStudy;
+  priority?: boolean;
+}) {
+  const coverAlt = study.client
+    ? `${study.client} — ${study.title}`
+    : study.title;
+
   return (
     <NavLink
       href={`/case-studies/${study.slug}`}
@@ -247,8 +272,9 @@ function CaseStudyHighlightCard({ study }: { study: CaseStudy }) {
         {study.cover_image_url ? (
           <Image
             src={study.cover_image_url}
-            alt={study.title}
+            alt={coverAlt}
             fill
+            priority={priority}
             sizes="(max-width: 768px) 100vw, 33vw"
             className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
           />
@@ -296,7 +322,11 @@ function FeaturedFeedCard({ item }: { item: NewsFeedItem }) {
         {item.image ? (
           <Image
             src={item.image}
-            alt={item.title}
+            alt={
+              item.type === "case-study" && item.client
+                ? `${item.client} — ${item.title}`
+                : item.title
+            }
             fill
             priority
             sizes="(max-width: 1024px) 100vw, 66vw"
@@ -359,7 +389,11 @@ function CompactFeedCard({ item }: { item: NewsFeedItem }) {
           {item.image ? (
             <Image
               src={item.image}
-              alt={item.title}
+              alt={
+                item.type === "case-study" && item.client
+                  ? `${item.client} — ${item.title}`
+                  : item.title
+              }
               fill
               sizes="96px"
               className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
@@ -369,8 +403,8 @@ function CompactFeedCard({ item }: { item: NewsFeedItem }) {
               <Image
                 src="/logo.png"
                 alt="Bogues Group"
-                width={24}
-                height={24}
+                width={125}
+                height={118}
                 className="h-6 w-auto opacity-40"
               />
             </div>
@@ -539,10 +573,13 @@ export default async function Home() {
           <div className="mt-12 grid grid-cols-2 items-center gap-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {clients.map((client) => {
               const img = (
-                <img
+                <Image
                   src={client.src}
                   alt={client.alt}
+                  width={client.width}
+                  height={client.height}
                   className="h-14 w-full object-contain opacity-70 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0"
+                  sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 20vw"
                   loading="lazy"
                 />
               );
@@ -602,8 +639,12 @@ export default async function Home() {
 
           {caseStudies.length > 0 ? (
             <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {caseStudies.map((study) => (
-                <CaseStudyHighlightCard key={study.id} study={study} />
+              {caseStudies.map((study, index) => (
+                <CaseStudyHighlightCard
+                  key={study.id}
+                  study={study}
+                  priority={isPriorityImage(index)}
+                />
               ))}
             </div>
           ) : (

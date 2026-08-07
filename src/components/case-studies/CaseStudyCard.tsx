@@ -10,14 +10,17 @@ import {
 
 interface CaseStudyCardProps {
   study: CaseStudy;
+  priority?: boolean;
 }
 
 function CaseStudyCardImage({
   imageUrl,
-  title,
+  alt,
+  priority = false,
 }: {
   imageUrl: string;
-  title: string;
+  alt: string;
+  priority?: boolean;
 }) {
   const [error, setError] = useState(false);
 
@@ -27,8 +30,8 @@ function CaseStudyCardImage({
         <Image
           src="/logo.png"
           alt="Bogues Group"
-          width={48}
-          height={48}
+          width={125}
+          height={118}
           className="h-12 w-auto opacity-40"
         />
       </div>
@@ -39,8 +42,9 @@ function CaseStudyCardImage({
     <div className="relative h-48 w-full overflow-hidden bg-gray-100">
       <Image
         src={imageUrl}
-        alt={title}
+        alt={alt}
         fill
+        priority={priority}
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
         onError={() => setError(true)}
@@ -49,22 +53,27 @@ function CaseStudyCardImage({
   );
 }
 
-export default function CaseStudyCard({ study }: CaseStudyCardProps) {
+export default function CaseStudyCard({ study, priority = false }: CaseStudyCardProps) {
+  const coverAlt = study.client
+    ? `${study.client} — ${study.title}`
+    : study.title;
+
   return (
     <NavLink href={`/case-studies/${study.slug}`} className="group block">
       <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-lg">
         {study.cover_image_url ? (
           <CaseStudyCardImage
             imageUrl={study.cover_image_url}
-            title={study.title}
+            alt={coverAlt}
+            priority={priority}
           />
         ) : (
           <div className="relative flex h-48 w-full items-center justify-center overflow-hidden bg-[#075E8B]/10">
             <Image
               src="/logo.png"
               alt="Bogues Group"
-              width={48}
-              height={48}
+              width={125}
+              height={118}
               className="h-12 w-auto opacity-40"
             />
           </div>

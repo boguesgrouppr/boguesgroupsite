@@ -1,27 +1,30 @@
 "use client";
 
+import Image from "next/image";
 import NavLink from "@/components/NavLink";
 
 type ClientLogo = {
   src: string;
   alt: string;
   href?: string;
+  width: number;
+  height: number;
 };
 
 const clients: ClientLogo[] = [
-  { src: "/logos/yelp-logo.png", alt: "Yelp", href: "/case-studies/yelp-crown-town-neighborhood-showdown" },
-  { src: "/logos/muggsy.png", alt: "Muggsy Bogues", href: "/case-studies/muggsy-bogues-family-foundation" },
-  { src: "/logos/microsoft.png", alt: "Microsoft", href: "/case-studies/microsoft-youthspark-ai" },
-  { src: "/logos/abc-board.png", alt: "Mecklenburg County ABC Board", href: "/case-studies/mecklenburg-county-abc-board" },
-  { src: "/logos/frankies.png", alt: "Frankie's Fun Park", href: "/case-studies/frankies-amusement-park" },
-  { src: "/logos/communities-in-schools.png", alt: "Communities In Schools", href: "/case-studies/communities-in-schools-charlotte-mecklenburg" },
-  { src: "/logos/Kraft.PNG", alt: "Kraft", href: "/case-studies/kraft" },
-  { src: "/logos/american_express.PNG", alt: "American Express" },
-  { src: "/logos/capital_one.PNG", alt: "Capital One" },
-  { src: "/logos/charlotte_crown.PNG", alt: "Charlotte Crown" },
-  { src: "/logos/charlotte_hornets.JPG", alt: "Charlotte Hornets" },
-  { src: "/logos/crva.PNG", alt: "CRVA" },
-  { src: "/logos/toronto_raptors.PNG", alt: "Toronto Raptors" },
+  { src: "/logos/yelp-logo.png", alt: "Yelp", href: "/case-studies/yelp-crown-town-neighborhood-showdown", width: 1200, height: 484 },
+  { src: "/logos/muggsy.png", alt: "Muggsy Bogues", href: "/case-studies/muggsy-bogues-family-foundation", width: 500, height: 108 },
+  { src: "/logos/microsoft.png", alt: "Microsoft", href: "/case-studies/microsoft-youthspark-ai", width: 216, height: 46 },
+  { src: "/logos/abc-board.png", alt: "Mecklenburg County ABC Board", href: "/case-studies/mecklenburg-county-abc-board", width: 458, height: 350 },
+  { src: "/logos/frankies.png", alt: "Frankie's Fun Park", href: "/case-studies/frankies-amusement-park", width: 200, height: 200 },
+  { src: "/logos/communities-in-schools.png", alt: "Communities In Schools", href: "/case-studies/communities-in-schools-charlotte-mecklenburg", width: 200, height: 200 },
+  { src: "/logos/Kraft.PNG", alt: "Kraft", href: "/case-studies/kraft", width: 3840, height: 2160 },
+  { src: "/logos/american_express.PNG", alt: "American Express", width: 225, height: 224 },
+  { src: "/logos/capital_one.PNG", alt: "Capital One", width: 4096, height: 4096 },
+  { src: "/logos/charlotte_crown.PNG", alt: "Charlotte Crown", width: 319, height: 313 },
+  { src: "/logos/charlotte_hornets.JPG", alt: "Charlotte Hornets", width: 228, height: 221 },
+  { src: "/logos/crva.PNG", alt: "CRVA", width: 512, height: 266 },
+  { src: "/logos/toronto_raptors.PNG", alt: "Toronto Raptors", width: 225, height: 225 },
 ];
 
 const ITEM_WIDTH = 240;
@@ -55,10 +58,13 @@ export default function LogoCarousel() {
               "flex-shrink-0 flex items-center justify-center transition-transform duration-300 hover:scale-110";
             const style = { width: `${ITEM_WIDTH}px`, padding: "0 40px" };
             const img = (
-              <img
+              <Image
                 src={client.src}
                 alt={client.alt}
+                width={client.width}
+                height={client.height}
                 className="h-12 w-full object-contain md:h-14"
+                sizes="240px"
                 loading="lazy"
               />
             );

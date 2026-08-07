@@ -1,5 +1,6 @@
 import Card from "@/components/Card";
 import { stripHtml } from "@/lib/content-urls";
+import { isPriorityImage } from "@/lib/image-priority";
 
 export interface BlogPostRow {
   id: number;
@@ -31,7 +32,7 @@ export default function BlogPostGrid({
         </p>
       )}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {visible.map((post) => (
+        {visible.map((post, index) => (
           <Card
             key={post.id}
             title={post.title}
@@ -39,8 +40,9 @@ export default function BlogPostGrid({
             slug={post.slug}
             href={`/blog/${post.slug}`}
             imageUrl={post.featured_image}
-            imageAlt=""
+            imageAlt={post.title}
             date={post.date}
+            priority={isPriorityImage(index)}
           />
         ))}
       </div>
