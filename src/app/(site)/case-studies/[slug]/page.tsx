@@ -4,6 +4,7 @@ import NavLink from "@/components/NavLink";
 import CaseStudyPdfDownload from "@/components/case-studies/CaseStudyPdfDownload";
 import VimeoEmbed from "@/components/case-studies/VimeoEmbed";
 import JsonLd from "@/components/JsonLd";
+import { buildReviewSchema } from "@/lib/jsonld";
 import {
   getCaseStudy,
   getCategoryLabel,
@@ -63,7 +64,7 @@ function ContentSection({
   body: string | null | undefined;
 }) {
   if (!body) return null;
-  
+
   const paragraphs = body
     .split(/\n{2,}/)
     .map((paragraph) => paragraph.trim())
@@ -102,6 +103,9 @@ export default async function CaseStudyPage({
   const description =
     caseStudy.short_description?.slice(0, 160) ??
     `Case study: ${caseStudy.title}`;
+  const hasTestimonial = Boolean(
+    caseStudy.testimonial && caseStudy.testimonial_author,
+  );
 
   const schemas: Record<string, unknown>[] = [
     {
@@ -271,9 +275,7 @@ export default async function CaseStudyPage({
           </section>
         )}
 
-        {caseStudy.pdf_url && (
-          <CaseStudyPdfDownload slug={caseStudy.slug} />
-        )}
+        {caseStudy.pdf_url && <CaseStudyPdfDownload slug={caseStudy.slug} />}
 
         {caseStudy.video_url && (
           <section>
@@ -290,6 +292,16 @@ export default async function CaseStudyPage({
           </section>
         )}
       </article>
+      {hasTestimonial && (
+        <JsonLd
+          data={buildReviewSchema({
+            testimonial: caseStudy.testimonial!,
+            testimonialAuthor: caseStudy.testimonial_author!,
+            serviceName: caseStudy.title,
+            pageUrl: `https://boguesgroup.com/case-studies/${caseStudy.slug}`,
+          })}
+        />
+      )}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import NavLink from "@/components/NavLink";
 import NewsletterForm from "./NewsletterForm";
+import { CookiePreferencesLink } from "./CookiePreferencesLink";
 
 const quickLinks = [
   { label: "About Us", href: "/about" },
@@ -201,6 +202,7 @@ export default function Footer() {
             >
               Terms of Service
             </NavLink>
+            <CookiePreferencesLink className="hover:text-white/60 transition-colors" />
           </div>
         </div>
       </div>
