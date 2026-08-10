@@ -182,47 +182,6 @@ function useGatedDownload(slug: string) {
 }
 
 function ResourceCard({ resource }: { resource: FreeResource }) {
-  const {
-    modalOpen,
-    setModalOpen,
-    email,
-    setEmail,
-    status,
-    setStatus,
-    errorMessage,
-    fileUrl,
-    handleSubmit,
-  } = useGatedDownload(resource.slug);
-
-  if (status === "success" && fileUrl) {
-    return (
-      <div className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-6 transition-shadow duration-300 hover:shadow-lg">
-        <div className="mb-4 h-1 w-10 rounded-full bg-gold" />
-        <h3 className="mb-2 font-heading text-lg font-bold text-navy">
-          {resource.title}
-        </h3>
-        <p className="mb-6 flex-1 text-sm text-gray-500">
-          {resource.description}
-        </p>
-        <a
-          href={fileUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-gold px-6 py-3 text-sm font-bold text-[#021f2e] shadow-lg transition-all duration-300 hover:scale-[1.03] hover:bg-[#e5c256] hover:shadow-xl"
-        >
-          <DownloadIcon className="h-4 w-4" />
-          Download PDF
-        </a>
-        <button
-          onClick={() => setStatus("idle")}
-          className="mt-4 text-center text-sm text-gray-500 hover:text-gray-700"
-        >
-          Download another resource
-        </button>
-      </div>
-    );
-  }
-
   return (
     <div className="group flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold/30 hover:shadow-lg">
       <div className="mb-4 h-1 w-10 rounded-full bg-gold transition-all duration-300 group-hover:w-14" />
@@ -233,116 +192,15 @@ function ResourceCard({ resource }: { resource: FreeResource }) {
         {resource.description}
       </p>
       <button
-        onClick={() => setModalOpen(true)}
-        className="inline-flex items-center justify-center gap-2 rounded-lg border-2 border-navy px-6 py-3.5 text-sm font-semibold text-navy transition-colors duration-300 hover:bg-navy hover:text-white"
+        type="button"
+        disabled
+        aria-disabled="true"
+        title="PDF downloads coming soon"
+        className="inline-flex cursor-not-allowed items-center justify-center gap-2 rounded-lg border-2 border-gray-300 px-6 py-3.5 text-sm font-semibold text-gray-400"
       >
         <DownloadIcon className="h-4 w-4" />
-        Download
+        Coming Soon
       </button>
-
-      {modalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
-          onClick={() => setModalOpen(false)}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby={`modal-title-${resource.slug}`}
-        >
-          <div
-            className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              type="button"
-              onClick={() => setModalOpen(false)}
-              className="absolute right-4 top-4 text-gray-400 transition-colors hover:text-gray-600"
-              aria-label="Close"
-            >
-              <svg
-                className="h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-            <h2
-              id={`modal-title-${resource.slug}`}
-              className="font-heading text-2xl font-bold text-navy"
-            >
-              {resource.title}
-            </h2>
-            <p className="mt-2 text-sm text-gray-600">
-              Enter your email to receive instant access to the PDF.
-            </p>
-            <form onSubmit={handleSubmit} noValidate className="mt-6 space-y-4">
-              <div>
-                <label
-                  htmlFor={`pdf-email-${resource.slug}`}
-                  className="sr-only"
-                >
-                  Email address
-                </label>
-                <input
-                  id={`pdf-email-${resource.slug}`}
-                  type="email"
-                  name="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@company.com"
-                  required
-                  autoComplete="email"
-                  inputMode="email"
-                  maxLength={254}
-                  disabled={status === "submitting"}
-                  className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm text-navy placeholder:text-gray-400 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 disabled:opacity-60"
-                />
-              </div>
-              {errorMessage && (
-                <p className="text-sm text-red-600" role="alert">
-                  {errorMessage}
-                </p>
-              )}
-              <button
-                type="submit"
-                disabled={status === "submitting"}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-gold px-6 py-3 text-sm font-bold text-[#021f2e] transition-colors hover:bg-[#e5c256] disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {status === "submitting" && (
-                  <svg
-                    className="h-4 w-4 animate-spin"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    aria-hidden="true"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    />
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                    />
-                  </svg>
-                )}
-                {status === "submitting" ? "Processing..." : "Get Access"}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
