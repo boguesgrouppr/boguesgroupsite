@@ -6,26 +6,40 @@
   "compatibility_flags": [
     "nodejs_compat",
     "nodejs_compat_populate_process_env",
-    "global_fetch_strictly_public"
+    "global_fetch_strictly_public",
   ],
   "vars": {
     "MAILCHIMP_LIST_ID": "7ccd0c1972",
-    "MAILCHIMP_SERVER_PREFIX": "us5"
+    "MAILCHIMP_SERVER_PREFIX": "us5",
+    "STRIPE_PRICE_DIGITAL": "price_1U3W6mLvLZr1ltN0UrOsbVd3",
+    "STRIPE_PRICE_PRINTED": "price_1U3W6nLvLZr1ltN0SOB2SZb0",
+    "STRIPE_PRICE_BUNDLE": "price_1U3W6oLvLZr1ltN0Ve7SLcgg",
+    "NEXT_PUBLIC_SITE_URL": "https://boguesgroup.com",
+    "NEXT_PUBLIC_SUPABASE_URL": "https://bkeqislsuxdcqygqhbpl.supabase.co",
+    "NEXT_PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAADXC9gQuNntTO6zp",
+    "NEXT_PUBLIC_MEDIA_BASE_URL": "https://bogues-group.pages.dev",
+    "MAILCHIMP_NEWSLETTER_TAG_NAME": "newsletter-case-study",
+    "MAILCHIMP_DOWNLOAD_SLUG_MERGE_TAG": "DL_SLUG",
+    "MAILCHIMP_DOWNLOAD_TITLE_MERGE_TAG": "DL_TITLE",
+    "MAILCHIMP_DOWNLOAD_TYPE_MERGE_TAG": "DL_TYPE",
+    "MAILCHIMP_CASE_STUDY_DOWNLOAD_TAG_NAME": "case-study-download",
+    "MAILCHIMP_BLOG_DOWNLOAD_TAG_NAME": "blog-download",
+    "LULU_ENV": "sandbox",
   },
   "assets": {
     "directory": ".open-next/assets",
-    "binding": "ASSETS"
+    "binding": "ASSETS",
   },
   "services": [
     {
       "binding": "WORKER_SELF_REFERENCE",
-      "service": "boguesgroupsite"
-    }
+      "service": "boguesgroupsite",
+    },
   ],
   "observability": {
     "logs": {
       "enabled": true,
-      "invocation_logs": true
-    }
-  }
+      "invocation_logs": true,
+    },
+  },
 }
