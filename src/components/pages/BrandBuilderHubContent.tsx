@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import Image from "next/image";
 import Hero from "@/components/Hero";
 import NavLink from "@/components/NavLink";
@@ -8,6 +8,7 @@ import NewsletterForm from "@/components/NewsletterForm";
 import VimeoEmbed from "@/components/case-studies/VimeoEmbed";
 import { toMediaUrl } from "@/lib/media-url";
 import { isValidEmail, normalizeEmail } from "@/lib/email";
+import WorkbookCheckoutButton from "@/components/WorkbookCheckoutButton";
 
 interface FreeResource {
   title: string;
@@ -329,6 +330,18 @@ function WebinarReplay() {
 
 export default function BrandBuilderHubContent() {
   const checklistImage = toMediaUrl("/media/2025/08/business-checklist-2.png");
+  const workbookCoverImage = "/logos/Brand_Builder_cover_page.png";
+  const [tierModalOpen, setTierModalOpen] = useState(false);
+
+  useEffect(() => {
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        setTierModalOpen(false);
+      }
+    };
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
 
   return (
     <>
@@ -391,9 +404,9 @@ export default function BrandBuilderHubContent() {
 
           <div className="mt-8 grid gap-8 rounded-2xl border border-gray-200 bg-white p-8 shadow-sm md:grid-cols-[0.7fr_1.3fr] md:p-10">
             <div className="relative self-start overflow-hidden rounded-xl bg-navy p-3 shadow-lg">
-              <div className="relative aspect-[7/10] w-full overflow-hidden rounded-lg">
+              <div className="relative aspect-[768/501] w-full overflow-hidden rounded-lg">
                 <Image
-                  src={checklistImage}
+                  src={workbookCoverImage}
                   alt="Brand Builder planning checklist"
                   fill
                   sizes="(max-width: 768px) 100vw, 35vw"
@@ -448,16 +461,110 @@ export default function BrandBuilderHubContent() {
               </ul>
 
               <button
-                className="mt-8 inline-block cursor-not-allowed rounded-lg bg-gray-200 px-8 py-4 text-base font-bold text-gray-500"
-                disabled
-                aria-disabled="true"
+                type="button"
+                onClick={() => setTierModalOpen(true)}
+                className="mt-8 inline-flex items-center justify-center rounded-lg bg-gold px-8 py-4 text-base font-bold text-[#021f2e] shadow-lg transition-all duration-300 hover:scale-[1.03] hover:bg-[#e5c256] hover:shadow-xl"
               >
-                Purchase the Complete Workbook &mdash; Coming Soon
+                Purchase the Complete Workbook
               </button>
             </div>
           </div>
         </div>
       </section>
+
+      {tierModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+          onClick={() => setTierModalOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="tier-modal-title"
+        >
+          <div
+            className="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl md:p-8"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setTierModalOpen(false)}
+              className="absolute right-4 top-4 text-gray-400 transition-colors hover:text-gray-600"
+              aria-label="Close"
+            >
+              <svg
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+            <h2
+              id="tier-modal-title"
+              className="font-heading text-2xl font-bold text-navy"
+            >
+              Choose Your Format
+            </h2>
+            <p className="mt-2 text-sm text-gray-600">
+              Pick the edition of The Complete Brand Builder Workbook that works
+              best for you.
+            </p>
+            <div className="mt-6 space-y-4">
+              <div className="flex items-center justify-between gap-4 rounded-xl border border-gray-200 p-4">
+                <div>
+                  <h3 className="font-heading text-base font-bold text-navy">
+                    Digital
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    Instant download &mdash; $99
+                  </p>
+                </div>
+                <WorkbookCheckoutButton
+                  tier="digital"
+                  label="Buy Digital"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-gold px-5 py-2.5 text-sm font-bold text-[#021f2e] shadow transition-all duration-300 hover:bg-[#e5c256]"
+                />
+              </div>
+              <div className="flex items-center justify-between gap-4 rounded-xl border border-gray-200 p-4">
+                <div>
+                  <h3 className="font-heading text-base font-bold text-navy">
+                    Printed
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    Delivered to your door &mdash; $149
+                  </p>
+                </div>
+                <WorkbookCheckoutButton
+                  tier="printed"
+                  label="Buy Printed"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-gold px-5 py-2.5 text-sm font-bold text-[#021f2e] shadow transition-all duration-300 hover:bg-[#e5c256]"
+                />
+              </div>
+              <div className="flex items-center justify-between gap-4 rounded-xl border border-gray-200 p-4">
+                <div>
+                  <h3 className="font-heading text-base font-bold text-navy">
+                    Bundle
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    Digital + Printed &mdash; $249
+                  </p>
+                </div>
+                <WorkbookCheckoutButton
+                  tier="bundle"
+                  label="Buy Bundle"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-gold px-5 py-2.5 text-sm font-bold text-[#021f2e] shadow transition-all duration-300 hover:bg-[#e5c256]"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Free Resources */}
       <section className="mx-auto max-w-6xl px-6 py-16 md:py-24">
