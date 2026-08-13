@@ -10,9 +10,15 @@ export const metadata: Metadata = {
     "Thank you! Your Brand Builder Workbook order is confirmed. Bogues Group.",
 };
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-07-29.dahlia",
-});
+function getStripeClient(): Stripe {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) {
+    throw new Error("STRIPE_SECRET_KEY is not configured");
+  }
+  return new Stripe(key, {
+    apiVersion: "2026-07-29.dahlia",
+  });
+}
 
 type OrderState =
   | "unverified"
@@ -32,6 +38,7 @@ async function resolveOrderState(
   }
 
   try {
+    const stripe = getStripeClient();
     const session = await stripe.checkout.sessions.retrieve(sessionId);
     if (session.payment_status !== "paid") {
       return "error";

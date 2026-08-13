@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2026-07-29.dahlia',
-});
+function getStripeClient(): Stripe {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) {
+    throw new Error('STRIPE_SECRET_KEY is not configured');
+  }
+  return new Stripe(key, {
+    apiVersion: '2026-07-29.dahlia',
+  });
+}
 
 const TIER_CONFIG = {
   digital: {
@@ -25,7 +31,7 @@ const TIER_CONFIG = {
 
 type Tier = keyof typeof TIER_CONFIG;
 
-const MAX_BULK_QUANTITY = 500; // sanity ceiling — adjust if Britney gives an explicit bulk cap
+const MAX_BULK_QUANTITY = 500;
 
 interface CheckoutRequestBody {
   tier: Tier;
@@ -39,6 +45,8 @@ function isValidQuantity(qty: unknown): qty is number {
 
 export async function POST(req: NextRequest) {
   try {
+    const stripe = getStripeClient();
+
     const body: CheckoutRequestBody = await req.json();
     const { tier, email, quantity } = body;
 
@@ -53,7 +61,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Checkout not configured' }, { status: 500 });
     }
 
-    // Resolve quantity: only bulk-eligible tiers may request >1
     const requestedQty = quantity ?? 1;
 
     if (!isValidQuantity(requestedQty)) {

@@ -1,9 +1,15 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-07-29.dahlia",
-});
+function getStripeClient(): Stripe {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) {
+    throw new Error("STRIPE_SECRET_KEY is not configured");
+  }
+  return new Stripe(key, {
+    apiVersion: "2026-07-29.dahlia",
+  });
+}
 
 const WORKBOOK_DOWNLOAD_URL = process.env.WORKBOOK_STORAGE_PATH;
 
@@ -41,6 +47,7 @@ export async function POST(request: Request) {
 
   let tier: string | undefined;
   try {
+    const stripe = getStripeClient();
     const session = await stripe.checkout.sessions.retrieve(sessionId);
     tier = session.metadata?.tier;
 

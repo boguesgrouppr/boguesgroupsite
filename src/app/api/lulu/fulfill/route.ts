@@ -7,13 +7,26 @@ function getLuluApiBase(): string {
     : "https://api.sandbox.lulu.com";
 }
 
-const LULU_API_BASE = getLuluApiBase();
-const LULU_AUTH_URL = `${LULU_API_BASE}/auth/realms/glasstree/protocol/openid-connect/token`;
+interface LuluConfig {
+  apiBase: string;
+  authUrl: string;
+  internalSecret: string;
+  podPackageId: string;
+  coverPdfUrl: string;
+  interiorPdfUrl: string;
+}
 
-const INTERNAL_SECRET = process.env.INTERNAL_API_SECRET;
-const POD_PACKAGE_ID = process.env.LULU_POD_PACKAGE_ID;
-const COVER_PDF_URL = process.env.LULU_COVER_PDF_URL;
-const INTERIOR_PDF_URL = process.env.LULU_INTERIOR_PDF_URL;
+function getLuluConfig(): LuluConfig {
+  const apiBase = getLuluApiBase();
+  return {
+    apiBase,
+    authUrl: `${apiBase}/auth/realms/glasstree/protocol/openid-connect/token`,
+    internalSecret: process.env.INTERNAL_API_SECRET ?? "",
+    podPackageId: process.env.LULU_POD_PACKAGE_ID ?? "",
+    coverPdfUrl: process.env.LULU_COVER_PDF_URL ?? "",
+    interiorPdfUrl: process.env.LULU_INTERIOR_PDF_URL ?? "",
+  };
+}
 
 
 interface FulfillRequestBody {
@@ -67,7 +80,7 @@ interface LuluPrintJobResponse {
   [key: string]: unknown;
 }
 
-async function getLuluAccessToken(): Promise<string> {
+async function getLuluAccessToken(authUrl: string): Promise<string> {
   const clientKey = process.env.LULU_CLIENT_KEY;
   const clientSecret = process.env.LULU_CLIENT_SECRET;
 
@@ -81,7 +94,7 @@ async function getLuluAccessToken(): Promise<string> {
   const body = new URLSearchParams();
   body.set("grant_type", "client_credentials");
 
-  const res = await fetch(LULU_AUTH_URL, {
+  const res = await fetch(authUrl, {
     method: "POST",
     headers: {
       Authorization: `Basic ${credentials}`,
@@ -105,10 +118,11 @@ async function getLuluAccessToken(): Promise<string> {
 }
 
 async function createLuluPrintJob(
+  apiBase: string,
   accessToken: string,
   payload: LuluPrintJobPayload,
 ): Promise<LuluPrintJobResponse> {
-  const res = await fetch(`${LULU_API_BASE}/print-jobs/`, {
+  const res = await fetch(`${apiBase}/print-jobs/`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -142,14 +156,16 @@ async function createLuluPrintJob(
 }
 
 export async function POST(request: Request) {
-  if (!INTERNAL_SECRET) {
+  const config = getLuluConfig();
+
+  if (!config.internalSecret) {
     console.error(
       "[lulu/fulfill] INTERNAL_API_SECRET is not set — endpoint disabled"
     );
     return NextResponse.json({ error: "Server not configured" }, { status: 500 });
   }
 
-  if (request.headers.get("x-internal-secret") !== INTERNAL_SECRET) {
+  if (request.headers.get("x-internal-secret") !== config.internalSecret) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -176,7 +192,7 @@ export async function POST(request: Request) {
     );
   }
 
-  if (!POD_PACKAGE_ID || !COVER_PDF_URL || !INTERIOR_PDF_URL) {
+  if (!config.podPackageId || !config.coverPdfUrl || !config.interiorPdfUrl) {
     console.error(
       "[lulu/fulfill] Missing env vars: LULU_POD_PACKAGE_ID / LULU_COVER_PDF_URL / LULU_INTERIOR_PDF_URL"
     );
@@ -185,7 +201,7 @@ export async function POST(request: Request) {
 
   let accessToken: string;
   try {
-    accessToken = await getLuluAccessToken();
+    accessToken = await getLuluAccessToken(config.authUrl);
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("[lulu/fulfill] Token fetch failed:", message);
@@ -200,9 +216,9 @@ export async function POST(request: Request) {
       {
         external_id: body.orderId,
         title: "The Complete Brand Builder Workbook",
-        cover_source_url: COVER_PDF_URL,
-        interior_source_url: INTERIOR_PDF_URL,
-        pod_package_id: POD_PACKAGE_ID,
+        cover_source_url: config.coverPdfUrl,
+        interior_source_url: config.interiorPdfUrl,
+        pod_package_id: config.podPackageId,
         quantity: body.quantity,
       },
     ],
@@ -222,7 +238,7 @@ export async function POST(request: Request) {
 
   let printJob: LuluPrintJobResponse;
   try {
-    printJob = await createLuluPrintJob(accessToken, payload);
+    printJob = await createLuluPrintJob(config.apiBase, accessToken, payload);
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("[lulu/fulfill] Print job creation failed:", message);
