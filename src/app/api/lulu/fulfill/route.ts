@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseServiceClient } from "@/lib/supabase-server";
 
 function getLuluApiBase(): string {
   return process.env.LULU_ENV === "production"
@@ -249,6 +249,7 @@ export async function POST(request: Request) {
   }
 
   try {
+    const supabase = getSupabaseServiceClient();
     const { error } = await supabase
       .from("workbook_orders")
       .update({
