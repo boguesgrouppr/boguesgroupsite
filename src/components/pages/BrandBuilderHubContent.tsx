@@ -425,7 +425,7 @@ export default function BrandBuilderHubContent() {
                 <strong>
                   The Complete Brand Builder Workbook is a practical, hands-on
                   resource designed to help entrepreneurs, business owners,
-                  nonprofits, and professionals build a brand from the inside
+                  students, and professionals build a brand from the inside
                   out.
                 </strong>
               </p>
