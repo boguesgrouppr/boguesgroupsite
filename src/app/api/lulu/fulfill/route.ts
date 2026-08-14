@@ -54,8 +54,12 @@ interface LuluTokenResponse {
 interface LuluLineItem {
   external_id: string;
   title: string;
-  cover_source_url: string;
-  interior_source_url: string;
+  cover: {
+    source_url: string;
+  };
+  interior: {
+    source_url: string;
+  };
   pod_package_id: string;
   quantity: number;
 }
@@ -221,8 +225,8 @@ export async function POST(request: Request) {
       {
         external_id: body.orderId,
         title: "The Complete Brand Builder Workbook",
-        cover_source_url: config.coverPdfUrl,
-        interior_source_url: config.interiorPdfUrl,
+        cover: { source_url: config.coverPdfUrl },
+        interior: { source_url: config.interiorPdfUrl },
         pod_package_id: config.podPackageId,
         quantity: body.quantity,
       },
