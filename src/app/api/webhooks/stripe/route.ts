@@ -122,6 +122,7 @@ async function triggerFulfillment(
   orderId: string,
   customerName: string | null | undefined,
   customerEmail: string | null | undefined,
+  customerPhone: string | null | undefined,
   shippingAddress: ShippingAddress,
   quantity: number
 ): Promise<void> {
@@ -154,6 +155,7 @@ async function triggerFulfillment(
       body: JSON.stringify({
         orderId,
         customerName: customerName ?? "",
+        customerPhone: customerPhone ?? "",
         customerEmail,
         shippingAddress,
         quantity,
@@ -281,6 +283,7 @@ export async function POST(req: NextRequest) {
         recorded.orderId,
         sessionFull.customer_details?.name,
         sessionFull.customer_email ?? sessionFull.customer_details?.email,
+        sessionFull.customer_details?.phone,
         shippingAddress,
         quantity
       );

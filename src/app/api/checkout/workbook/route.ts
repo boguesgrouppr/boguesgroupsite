@@ -84,6 +84,7 @@ export async function POST(req: NextRequest) {
       mode: 'payment',
       payment_method_types: ['card'],
       customer_email: email,
+      phone_number_collection: { enabled: tier === "printed" || tier === "bundle" },
       shipping_address_collection: config.requiresShipping
         ? { allowed_countries: ['US'] }
         : undefined,

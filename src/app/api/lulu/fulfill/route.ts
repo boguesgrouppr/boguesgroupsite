@@ -33,6 +33,7 @@ interface FulfillRequestBody {
   orderId: string;
   customerName: string;
   customerEmail: string;
+  customerPhone: string;
   shippingAddress: {
     line1: string;
     line2?: string;
@@ -234,7 +235,7 @@ export async function POST(request: Request) {
       state_code: body.shippingAddress.state,
       postcode: body.shippingAddress.postal_code,
       country_code: body.shippingAddress.country,
-      phone_number: "",
+      phone_number: body.customerPhone || "",
     },
     shipping_level: "GROUND",
     external_id: body.orderId,
