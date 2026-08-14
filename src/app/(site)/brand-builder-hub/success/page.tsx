@@ -17,14 +17,11 @@ function getStripeClient(): Stripe {
   }
   return new Stripe(key, {
     apiVersion: "2026-07-29.dahlia",
+    httpClient: Stripe.createFetchHttpClient(),
   });
 }
 
-type OrderState =
-  | "unverified"
-  | "paid-digital"
-  | "paid-print"
-  | "error";
+type OrderState = "unverified" | "paid-digital" | "paid-print" | "error";
 
 interface BrandBuilderSuccessPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -53,7 +50,8 @@ async function resolveOrderState(
     }
 
     return "unverified";
-  } catch {
+  } catch (error) {
+    console.error("Error retrieving Stripe session", sessionId, error);
     return "error";
   }
 }
@@ -92,7 +90,7 @@ export default async function BrandBuilderSuccessPage({
           </div>
           <h1 className="mt-6 font-heading text-2xl font-bold text-navy md:text-3xl">
             {orderState === "error"
-              ? "We couldn&apos;t verify your order"
+              ? "We couldn't verify your order"
               : "Thank you for your purchase!"}
           </h1>
 
@@ -110,7 +108,7 @@ export default async function BrandBuilderSuccessPage({
 
           {orderState === "error" && (
             <p className="mt-4 leading-relaxed text-body">
-              We couldn&apos;t verify this order. If you believe this is a
+              We couldn&apos;t verify your order. If you believe this is a
               mistake, please contact our support team.
             </p>
           )}
@@ -136,8 +134,7 @@ export default async function BrandBuilderSuccessPage({
             </p>
           )}
 
-          {(orderState === "unverified" ||
-            orderState === "paid-print") && (
+          {(orderState === "unverified" || orderState === "paid-print") && (
             <p className="mt-4 leading-relaxed text-body">
               A receipt has been sent to your email. Digital orders will be
               available to download shortly, and printed orders will ship to
@@ -156,8 +153,7 @@ export default async function BrandBuilderSuccessPage({
             </div>
           )}
 
-          {(orderState === "paid-digital" ||
-            orderState === "paid-print") && (
+          {(orderState === "paid-digital" || orderState === "paid-print") && (
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <NavLink
                 href="/brand-builder-hub"
