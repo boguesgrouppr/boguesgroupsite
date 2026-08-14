@@ -28,7 +28,6 @@ function getLuluConfig(): LuluConfig {
   };
 }
 
-
 interface FulfillRequestBody {
   orderId: string;
   customerName: string;
@@ -64,6 +63,32 @@ interface LuluLineItem {
   quantity: number;
 }
 
+const LULU_STREET_MAX_LENGTH = 30;
+
+function formatLuluStreetFields(
+  line1: string,
+  line2?: string,
+): { street1: string; street2: string } {
+  const trimmedLine1 = line1.trim();
+  const trimmedLine2 = line2?.trim() ?? "";
+
+  if (trimmedLine1.length <= LULU_STREET_MAX_LENGTH) {
+    return {
+      street1: trimmedLine1,
+      street2: trimmedLine2.slice(0, LULU_STREET_MAX_LENGTH),
+    };
+  }
+
+  const street1 = trimmedLine1.slice(0, LULU_STREET_MAX_LENGTH).trim();
+  const overflow = trimmedLine1.slice(LULU_STREET_MAX_LENGTH).trim();
+  const combinedStreet2 = [overflow, trimmedLine2].filter(Boolean).join(" ");
+
+  return {
+    street1,
+    street2: combinedStreet2.slice(0, LULU_STREET_MAX_LENGTH),
+  };
+}
+
 interface LuluPrintJobPayload {
   contact_email: string;
   line_items: LuluLineItem[];
@@ -96,7 +121,7 @@ async function getLuluAccessToken(authUrl: string): Promise<string> {
   }
 
   const credentials = Buffer.from(`${clientKey}:${clientSecret}`).toString(
-    "base64"
+    "base64",
   );
   const body = new URLSearchParams();
   body.set("grant_type", "client_credentials");
@@ -142,7 +167,7 @@ async function createLuluPrintJob(
 
   if (!res.ok) {
     throw new Error(
-      `Lulu print job creation failed (${res.status}): ${bodyText}`
+      `Lulu print job creation failed (${res.status}): ${bodyText}`,
     );
   }
 
@@ -151,7 +176,7 @@ async function createLuluPrintJob(
     data = JSON.parse(bodyText) as LuluPrintJobResponse;
   } catch {
     throw new Error(
-      `Lulu print job creation returned invalid JSON: ${bodyText}`
+      `Lulu print job creation returned invalid JSON: ${bodyText}`,
     );
   }
 
@@ -167,9 +192,12 @@ export async function POST(request: Request) {
 
   if (!config.internalSecret) {
     console.error(
-      "[lulu/fulfill] INTERNAL_API_SECRET is not set — endpoint disabled"
+      "[lulu/fulfill] INTERNAL_API_SECRET is not set — endpoint disabled",
     );
-    return NextResponse.json({ error: "Server not configured" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Server not configured" },
+      { status: 500 },
+    );
   }
 
   if (request.headers.get("x-internal-secret") !== config.internalSecret) {
@@ -181,7 +209,10 @@ export async function POST(request: Request) {
   try {
     body = (await request.json()) as FulfillRequestBody;
   } catch {
-    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Invalid request body" },
+      { status: 400 },
+    );
   }
 
   if (
@@ -195,16 +226,22 @@ export async function POST(request: Request) {
     !body.quantity
   ) {
     return NextResponse.json(
-      { error: "Missing required fields (orderId, customerName, shippingAddress, quantity)" },
-      { status: 400 }
+      {
+        error:
+          "Missing required fields (orderId, customerName, shippingAddress, quantity)",
+      },
+      { status: 400 },
     );
   }
 
   if (!config.podPackageId || !config.coverPdfUrl || !config.interiorPdfUrl) {
     console.error(
-      "[lulu/fulfill] Missing env vars: LULU_POD_PACKAGE_ID / LULU_COVER_PDF_URL / LULU_INTERIOR_PDF_URL"
+      "[lulu/fulfill] Missing env vars: LULU_POD_PACKAGE_ID / LULU_COVER_PDF_URL / LULU_INTERIOR_PDF_URL",
     );
-    return NextResponse.json({ error: "Server not configured" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Server not configured" },
+      { status: 500 },
+    );
   }
 
   let accessToken: string;
@@ -215,9 +252,14 @@ export async function POST(request: Request) {
     console.error("[lulu/fulfill] Token fetch failed:", message);
     return NextResponse.json(
       { error: "Failed to authenticate with Lulu" },
-      { status: 502 }
+      { status: 502 },
     );
   }
+
+  const { street1, street2 } = formatLuluStreetFields(
+    body.shippingAddress.line1,
+    body.shippingAddress.line2,
+  );
 
   const payload: LuluPrintJobPayload = {
     contact_email: body.customerEmail,
@@ -233,8 +275,8 @@ export async function POST(request: Request) {
     ],
     shipping_address: {
       name: body.customerName,
-      street1: body.shippingAddress.line1,
-      street2: body.shippingAddress.line2 ?? "",
+      street1,
+      street2,
       city: body.shippingAddress.city,
       state_code: body.shippingAddress.state,
       postcode: body.shippingAddress.postal_code,
@@ -244,16 +286,32 @@ export async function POST(request: Request) {
     shipping_level: "GROUND",
     external_id: body.orderId,
   };
-
   let printJob: LuluPrintJobResponse;
   try {
     printJob = await createLuluPrintJob(config.apiBase, accessToken, payload);
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("[lulu/fulfill] Print job creation failed:", message);
+
+    try {
+      const supabase = getSupabaseServiceClient();
+      await supabase
+        .from("workbook_orders")
+        .update({
+          status: "fulfillment_failed",
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", body.orderId);
+    } catch (updateErr) {
+      console.error(
+        "[lulu/fulfill] Failed to mark order as fulfillment_failed:",
+        updateErr instanceof Error ? updateErr.message : String(updateErr),
+      );
+    }
+
     return NextResponse.json(
       { error: "Failed to create Lulu print job" },
-      { status: 502 }
+      { status: 502 },
     );
   }
 
@@ -277,11 +335,14 @@ export async function POST(request: Request) {
       "[lulu/fulfill] Supabase update failed for order",
       body.orderId,
       ":",
-      message
+      message,
     );
     return NextResponse.json(
-      { error: "Print job created but failed to update order", printJobId: printJob.id },
-      { status: 500 }
+      {
+        error: "Print job created but failed to update order",
+        printJobId: printJob.id,
+      },
+      { status: 500 },
     );
   }
 
