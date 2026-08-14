@@ -32,6 +32,7 @@ function getLuluConfig(): LuluConfig {
 interface FulfillRequestBody {
   orderId: string;
   customerName: string;
+  customerEmail: string;
   shippingAddress: {
     line1: string;
     line2?: string;
@@ -59,6 +60,7 @@ interface LuluLineItem {
 }
 
 interface LuluPrintJobPayload {
+  contact_email: string;
   line_items: LuluLineItem[];
   shipping_address: {
     name: string;
@@ -180,6 +182,7 @@ export async function POST(request: Request) {
   if (
     !body.orderId ||
     !body.customerName ||
+    !body.customerEmail ||
     !body.shippingAddress?.line1 ||
     !body.shippingAddress?.city ||
     !body.shippingAddress?.postal_code ||
@@ -212,6 +215,7 @@ export async function POST(request: Request) {
   }
 
   const payload: LuluPrintJobPayload = {
+    contact_email: body.customerEmail,
     line_items: [
       {
         external_id: body.orderId,
