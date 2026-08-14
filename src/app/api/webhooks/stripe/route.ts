@@ -92,7 +92,7 @@ async function recordOrder(
       {
         stripe_session_id: session.id,
         stripe_payment_intent_id: paymentIntentId,
-        customer_email: session.customer_email ?? null,
+        customer_email: session.customer_email ?? session.customer_details?.email ?? null,
         customer_name: session.customer_details?.name ?? null,
         tier,
         amount_cents: session.amount_total ?? null,
