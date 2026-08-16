@@ -112,6 +112,14 @@ interface LuluPrintJobResponse {
   [key: string]: unknown;
 }
 
+interface LuluShippingOption {
+  level: string;
+  cost_incl_tax: string;
+  total_days_min: number;
+  total_days_max: number;
+  [key: string]: unknown;
+}
+
 async function getLuluAccessToken(authUrl: string): Promise<string> {
   const clientKey = process.env.LULU_CLIENT_KEY;
   const clientSecret = process.env.LULU_CLIENT_SECRET;
@@ -147,6 +155,73 @@ async function getLuluAccessToken(authUrl: string): Promise<string> {
   }
 
   return data.access_token;
+}
+
+// Queries Lulu's shipping-options endpoint for this exact address/package/
+// quantity combination and returns the best available level. Prevents
+// hard-failures like "Failed to find GROUND shipping option for Print Job"
+// when GROUND isn't offered for a given destination (e.g. certain states,
+// P.O. boxes, correctional facilities, some rural areas per Lulu's own
+// shipping docs). Falls back to MAIL — the most universally available
+// level — if the lookup itself fails or returns nothing.
+async function getAvailableShippingLevel(
+  apiBase: string,
+  accessToken: string,
+  countryCode: string,
+  stateCode: string,
+  podPackageId: string,
+  quantity: number,
+): Promise<string> {
+  const params = new URLSearchParams({
+    country_code: countryCode,
+    state_code: stateCode,
+    quantity: String(quantity),
+    pod_package_id: podPackageId,
+  });
+
+  const res = await fetch(
+    `${apiBase}/shipping-options/?${params.toString()}`,
+    {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    },
+  );
+
+  if (!res.ok) {
+    console.warn(
+      "[lulu/fulfill] Shipping options lookup failed, defaulting to MAIL",
+    );
+    return "MAIL";
+  }
+
+  let options: LuluShippingOption[];
+  try {
+    options = (await res.json()) as LuluShippingOption[];
+  } catch {
+    console.warn(
+      "[lulu/fulfill] Shipping options response was not valid JSON, defaulting to MAIL",
+    );
+    return "MAIL";
+  }
+
+  if (!options.length) {
+    return "MAIL";
+  }
+
+  const preferredOrder = [
+    "GROUND",
+    "PRIORITY_MAIL",
+    "MAIL",
+    "EXPEDITED",
+    "EXPRESS",
+  ];
+
+  for (const level of preferredOrder) {
+    if (options.some((o) => o.level === level)) {
+      return level;
+    }
+  }
+
+  return options[0].level;
 }
 
 async function createLuluPrintJob(
@@ -256,6 +331,15 @@ export async function POST(request: Request) {
     );
   }
 
+  const shippingLevel = await getAvailableShippingLevel(
+    config.apiBase,
+    accessToken,
+    body.shippingAddress.country,
+    body.shippingAddress.state,
+    config.podPackageId,
+    body.quantity,
+  );
+
   const { street1, street2 } = formatLuluStreetFields(
     body.shippingAddress.line1,
     body.shippingAddress.line2,
@@ -283,9 +367,10 @@ export async function POST(request: Request) {
       country_code: body.shippingAddress.country,
       phone_number: body.customerPhone || "",
     },
-    shipping_level: "GROUND",
+    shipping_level: shippingLevel,
     external_id: body.orderId,
   };
+
   let printJob: LuluPrintJobResponse;
   try {
     printJob = await createLuluPrintJob(config.apiBase, accessToken, payload);
