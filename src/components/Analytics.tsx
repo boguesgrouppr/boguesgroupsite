@@ -5,7 +5,7 @@ import Script from "next/script";
 import { useConsent } from "@/contexts/ConsentProvider";
 import { GaPageviewTracker } from "@/components/GaPageviewTracker";
 
-const GA4_MEASUREMENT_ID = "G-1G1HEFQKMR";
+const GA4_MEASUREMENT_ID = "G-H9KDXM5VSF";
 const GTM_CONTAINER_ID: string | undefined = undefined;
 
 
