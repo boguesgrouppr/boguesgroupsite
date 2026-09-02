@@ -11,9 +11,9 @@
   "vars": {
     "MAILCHIMP_LIST_ID": "7ccd0c1972",
     "MAILCHIMP_SERVER_PREFIX": "us5",
-    "STRIPE_PRICE_DIGITAL": "price_1U3W6mLvLZr1ltN0UrOsbVd3",
-    "STRIPE_PRICE_PRINTED": "price_1U3W6nLvLZr1ltN0SOB2SZb0",
-    "STRIPE_PRICE_BUNDLE": "price_1U3W6oLvLZr1ltN0Ve7SLcgg",
+    "STRIPE_PRICE_DIGITAL": "price_1U5pmtLvLZr1ltN0JDW0HKlw",
+    "STRIPE_PRICE_PRINTED": "price_1U5ppeLvLZr1ltN0K1xMgWJW",
+    "STRIPE_PRICE_BUNDLE": "price_1U5pqkLvLZr1ltN0Hf7dWXAx",
     "NEXT_PUBLIC_SITE_URL": "https://boguesgroup.com",
     "NEXT_PUBLIC_SUPABASE_URL": "https://bkeqislsuxdcqygqhbpl.supabase.co",
     "NEXT_PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAADXC9gQuNntTO6zp",
@@ -24,7 +24,7 @@
     "MAILCHIMP_DOWNLOAD_TYPE_MERGE_TAG": "DL_TYPE",
     "MAILCHIMP_CASE_STUDY_DOWNLOAD_TAG_NAME": "case-study-download",
     "MAILCHIMP_BLOG_DOWNLOAD_TAG_NAME": "blog-download",
-    "LULU_ENV": "sandbox",
+    "LULU_ENV": "production",
   },
   "assets": {
     "directory": ".open-next/assets",
