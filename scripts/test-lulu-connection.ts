@@ -3,9 +3,9 @@ import path from 'path';
 
 config({ path: path.resolve(process.cwd(), '.env.local') });
 
-const LULU_API_BASE = 'https://api.sandbox.lulu.com';
+const LULU_API_BASE = 'https://api.lulu.com';
 const LULU_AUTH_URL =
-  'https://api.sandbox.lulu.com/auth/realms/glasstree/protocol/openid-connect/token';
+  'https://api.lulu.com/auth/realms/glasstree/protocol/openid-connect/token';
 
 interface LuluTokenResponse {
   access_token: string;
@@ -144,7 +144,6 @@ async function testCostCalculation(token: string): Promise<void> {
 }
 
 async function main() {
-  console.log('Lulu Direct Print API — sandbox connection test');
   console.log('Base URL:', LULU_API_BASE);
 
   try {
@@ -160,20 +159,14 @@ async function main() {
     await testCostCalculation(token);
     console.log('✅ Success');
 
-    console.log(
-      '\nSandbox API access: WORKING — no Connect Store dependency'
-    );
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error('\n❌ Failure detail:', message);
-    console.error(
-      '\nSandbox API access: FAILED — see errors above'
-    );
 
     if (message.includes('[step 1]')) {
       console.error(
         '\nAuth failing usually means the key/secret pair is wrong or the account' +
-          ' is not provisioned for Lulu Print API sandbox access.'
+          ' is not provisioned for Lulu Print API access.'
       );
     }
 

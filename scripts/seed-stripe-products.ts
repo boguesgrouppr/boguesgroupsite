@@ -20,7 +20,7 @@ import path from 'path';
 config({ path: path.resolve(process.cwd(), '.env.local') });
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2026-07-29.dahlia',
+  apiVersion: '2026-08-26.dahlia',
   httpClient: Stripe.createFetchHttpClient()
 });
 
