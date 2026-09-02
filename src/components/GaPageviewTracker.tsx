@@ -10,7 +10,7 @@ declare global {
   }
 }
 
-const GA4_MEASUREMENT_ID = "G-1G1HEFQKMR";
+const GA4_MEASUREMENT_ID = "G-H9KDXM5VSF";
 
 export function GaPageviewTracker() {
   const pathname = usePathname();
