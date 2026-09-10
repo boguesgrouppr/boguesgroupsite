@@ -31,6 +31,7 @@ const navItems: NavItem[] = [
       { label: "Meet the Founder", href: "/meet-the-founder" },
       { label: "Press Room", href: "/press-room" },
       { label: "Testimonials", href: "/testimonials" },
+      { label: "Continued Education", href: "/cpcc" },
     ],
   },
   { label: "Contact", href: "/contact" },
