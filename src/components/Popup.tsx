@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import NavLink from "@/components/NavLink";
 
+const CPCC_LANDING_PATH = "/cpcc";
+
 export default function Popup() {
   const [visible, setVisible] = useState(false);
 
@@ -41,10 +43,10 @@ export default function Popup() {
         </button>
 
         {/* Banner image */}
-        <NavLink href="/brand-builder-hub" onClick={dismiss}>
+        <NavLink href={CPCC_LANDING_PATH} onClick={dismiss}>
           <Image
-            src="/popup-banner.png"
-            alt="Grow your brand with Bogues Group"
+            src="/logos/Website_Pop_Up_Banner.png"
+            alt="Applied Communications & Branding Certificate — Central Piedmont Community College"
             width={1024}
             height={683}
             className="w-full h-auto"
@@ -55,16 +57,16 @@ export default function Popup() {
         {/* CTA bar */}
         <div className="bg-[#075E8B] px-8 py-8 text-center">
           <p className="text-white text-lg mb-5 font-medium">
-            Expert PR tips and resources to build your brand
+            Strengthen your personal brand and advance your career
           </p>
 
           {/* Subtle animated border button */}
           <NavLink
-            href="/brand-builder-hub"
+            href={CPCC_LANDING_PATH}
             onClick={dismiss}
             className="popup-cta relative inline-block rounded-lg bg-[#D4AF38] px-8 py-4 text-base font-bold text-[#021f2e] transition-all hover:bg-[#e5c256] hover:scale-[1.02]"
           >
-            Explore the Brand Builder Hub
+            Explore the Certificate Program
           </NavLink>
         </div>
 
