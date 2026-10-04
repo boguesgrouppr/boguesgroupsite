@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import Script from "next/script";
-import { Plus_Jakarta_Sans, Roboto, Poppins, Rubik } from "next/font/google";
+import { Plus_Jakarta_Sans, Poppins, Rubik } from "next/font/google";
 import QueryProvider from "@/contexts/QueryProvider";
 import "./globals.css";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
@@ -15,13 +15,6 @@ const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-heading",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
-  display: "swap",
-});
-
-const roboto = Roboto({
-  variable: "--font-body",
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
   display: "swap",
 });
 
@@ -83,8 +76,18 @@ export default async function RootLayout({
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={`${plusJakarta.variable} ${roboto.variable} ${poppins.variable} ${rubik.variable} h-full antialiased`}
+      style={{ "--font-body": "Roboto, system-ui, sans-serif" } as React.CSSProperties}
+      className={`${plusJakarta.variable} ${poppins.variable} ${rubik.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         <JsonLd data={[buildOrganizationSchema(), buildLocalBusinessSchema()]} />
         <ConsentProvider initialConsent={initialConsent}>
