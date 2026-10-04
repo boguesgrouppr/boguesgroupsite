@@ -12,13 +12,6 @@ const nextConfig: NextConfig = {
       { source: "/blog/:slug(__trashed.*)", destination: `${SITE}/blog`, permanent: true },
       { source: "/category/:path*", destination: `${SITE}/blog`, permanent: true },
       { source: "/tag/:path*", destination: `${SITE}/blog`, permanent: true },
-      // Canonical host: apex -> www (keeps path and query)
-      {
-        source: "/:path*",
-        has: [{ type: "host", value: "boguesgroup.com" }],
-        destination: `${SITE}/:path*`,
-        permanent: true,
-      },
     ];
   },
   images: {
