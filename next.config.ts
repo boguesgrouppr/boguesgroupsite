@@ -1,18 +1,17 @@
 import type { NextConfig } from "next";
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
+import { LEGACY_REDIRECTS, SITE_URL } from "./src/lib/redirects";
 
 const nextConfig: NextConfig = {
   output: "standalone",
   async redirects() {
     return [
+      ...LEGACY_REDIRECTS,
+      // Canonical host: apex -> www (keeps path and query string)
       {
-        source: "/small-business-hub",
-        destination: "/brand-builder-hub",
-        permanent: true,
-      },
-      {
-        source: "/small-business-hub/:path*",
-        destination: "/brand-builder-hub",
+        source: "/:path*",
+        has: [{ type: "host", value: "boguesgroup.com" }],
+        destination: `${SITE_URL}/:path*`,
         permanent: true,
       },
     ];
