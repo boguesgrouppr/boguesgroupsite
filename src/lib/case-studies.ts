@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { supabase } from "@/lib/supabase";
 import { toMediaUrl } from "@/lib/media-url";
 import type { CaseStudy, KeyMetric } from "@/lib/case-studies-shared";
@@ -22,6 +23,9 @@ export {
   parseCategories,
   parseIndustryTags,
 } from "@/lib/case-studies-shared";
+
+const REVALIDATE_SECONDS = 3600;
+const CACHE_TAG = "case-studies";
 
 function parseKeyMetrics(raw: unknown): KeyMetric[] | null {
   if (raw === null || raw === undefined) return null;
@@ -83,51 +87,77 @@ function mapRow(row: Record<string, unknown>): CaseStudy {
   };
 }
 
-export const getAllCaseStudies = cache(async (): Promise<CaseStudy[]> => {
-  const { data, error } = await supabase
-    .from("case_studies")
-    .select("*")
-    .eq("is_published", true)
-    .order("sort_order", { ascending: true });
+// Throwing inside unstable_cache callbacks keeps failed responses out of the cache.
+const fetchAllCaseStudies = unstable_cache(
+  async (): Promise<CaseStudy[]> => {
+    const { data, error } = await supabase
+      .from("case_studies")
+      .select("*")
+      .eq("is_published", true)
+      .order("sort_order", { ascending: true });
 
-  if (error) {
-    console.error("Supabase error fetching case studies:", error.message, error);
-    return [];
-  }
+    if (error) throw new Error(error.message);
+    return (data ?? []).map((row) => mapRow(row as Record<string, unknown>));
+  },
+  ["case-studies:all"],
+  { revalidate: REVALIDATE_SECONDS, tags: [CACHE_TAG] }
+);
 
-  return (data ?? []).map((row) => mapRow(row as Record<string, unknown>));
-});
-
-export const getCaseStudy = cache(
-  async (slug: string): Promise<CaseStudy | undefined> => {
+const fetchCaseStudyBySlug = unstable_cache(
+  async (slug: string): Promise<CaseStudy | null> => {
     const { data, error } = await supabase
       .from("case_studies")
       .select("*")
       .eq("slug", slug)
       .eq("is_published", true)
-      .single();
+      .maybeSingle();
 
-    if (error || !data) {
-      if (error) {
-        console.error("Supabase error fetching case study:", error.message, error);
-      }
+    if (error) throw new Error(error.message);
+    return data ? mapRow(data as Record<string, unknown>) : null;
+  },
+  ["case-studies:by-slug"],
+  { revalidate: REVALIDATE_SECONDS, tags: [CACHE_TAG] }
+);
+
+const fetchPublishedSlugs = unstable_cache(
+  async (): Promise<string[]> => {
+    const { data, error } = await supabase
+      .from("case_studies")
+      .select("slug")
+      .eq("is_published", true);
+
+    if (error) throw new Error(error.message);
+    return (data ?? []).map((row) => row.slug as string);
+  },
+  ["case-studies:slugs"],
+  { revalidate: REVALIDATE_SECONDS, tags: [CACHE_TAG] }
+);
+
+export const getAllCaseStudies = cache(async (): Promise<CaseStudy[]> => {
+  try {
+    return await fetchAllCaseStudies();
+  } catch (err) {
+    console.error("Case studies fetch failed:", err instanceof Error ? err.message : err);
+    return [];
+  }
+});
+
+export const getCaseStudy = cache(
+  async (slug: string): Promise<CaseStudy | undefined> => {
+    try {
+      return (await fetchCaseStudyBySlug(slug)) ?? undefined;
+    } catch (err) {
+      console.error("Case study fetch failed:", err instanceof Error ? err.message : err);
       return undefined;
     }
-
-    return mapRow(data as Record<string, unknown>);
   }
 );
 
 export const getPublishedCaseStudySlugs = cache(async (): Promise<string[]> => {
-  const { data, error } = await supabase
-    .from("case_studies")
-    .select("slug")
-    .eq("is_published", true);
-
-  if (error) {
-    console.error("Supabase error fetching case study slugs:", error.message, error);
+  try {
+    return await fetchPublishedSlugs();
+  } catch (err) {
+    console.error("Case study slugs fetch failed:", err instanceof Error ? err.message : err);
     return [];
   }
-
-  return (data ?? []).map((row) => row.slug);
 });

@@ -669,6 +669,7 @@ export default function BrandBuilderHubContent() {
           <div className="mt-8 md:mt-0 md:shrink-0">
             <NavLink
               href="/collective-grow"
+              aria-disabled="true"
               className="inline-flex items-center whitespace-nowrap rounded-lg bg-gold px-8 py-4 text-base font-bold text-[#021f2e] shadow-lg transition-all duration-300 hover:scale-[1.03] hover:bg-[#e5c256] hover:shadow-xl"
             >
               Explore Collective Grow
