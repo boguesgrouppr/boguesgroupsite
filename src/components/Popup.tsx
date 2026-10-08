@@ -49,6 +49,7 @@ export default function Popup() {
             alt="Applied Communications & Branding Certificate — Central Piedmont Community College"
             width={1024}
             height={683}
+            loading="eager"
             className="w-full h-auto"
             unoptimized
           />

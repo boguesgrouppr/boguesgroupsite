@@ -538,6 +538,7 @@ export default function Cpcc() {
                 alt="Brittney Bogues, Founder & Chief Innovation Officer, The Bogues Group"
                 fill
                 priority
+                loading="eager"
                 sizes="(max-width: 1024px) 100vw, 40vw"
                 className="object-cover object-top"
               />
