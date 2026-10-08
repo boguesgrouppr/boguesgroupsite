@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import Script from "next/script";
-import { Plus_Jakarta_Sans, Poppins, Rubik } from "next/font/google";
+import localFont from "next/font/local";
 import QueryProvider from "@/contexts/QueryProvider";
 import "./globals.css";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
@@ -11,24 +11,39 @@ import { CONSENT_COOKIE_NAME, type ConsentState } from "@/lib/consent";
 import JsonLd from "@/components/JsonLd";
 import { buildOrganizationSchema, buildLocalBusinessSchema } from "@/lib/jsonld";
 
-const plusJakarta = Plus_Jakarta_Sans({
+// Self-hosted (latin subset) so builds never depend on fonts.googleapis.com.
+// Files live in src/fonts and are copied from @fontsource packages.
+const plusJakarta = localFont({
   variable: "--font-heading",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  src: [
+    {
+      path: "../fonts/plus-jakarta-sans-latin-wght-normal.woff2",
+      weight: "200 800",
+      style: "normal",
+    },
+  ],
   display: "swap",
 });
 
-const poppins = Poppins({
+const poppins = localFont({
   variable: "--font-nav",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  src: [
+    { path: "../fonts/poppins-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/poppins-latin-500-normal.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/poppins-latin-600-normal.woff2", weight: "600", style: "normal" },
+  ],
   display: "swap",
 });
 
-const rubik = Rubik({
+const rubik = localFont({
   variable: "--font-accent",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  src: [
+    {
+      path: "../fonts/rubik-latin-wght-normal.woff2",
+      weight: "300 900",
+      style: "normal",
+    },
+  ],
   display: "swap",
 });
 
