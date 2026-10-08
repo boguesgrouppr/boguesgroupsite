@@ -25,6 +25,7 @@
     "MAILCHIMP_CASE_STUDY_DOWNLOAD_TAG_NAME": "case-study-download",
     "MAILCHIMP_BLOG_DOWNLOAD_TAG_NAME": "blog-download",
     "LULU_ENV": "production",
+    "TURNSTILE_HOSTNAMES": "boguesgroup.com,www.boguesgroup.com"
   },
   "assets": {
     "directory": ".open-next/assets",

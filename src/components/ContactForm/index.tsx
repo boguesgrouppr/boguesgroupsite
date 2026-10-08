@@ -480,6 +480,7 @@ export default function ContactForm() {
           <Turnstile
             ref={turnstileRef}
             siteKey={TURNSTILE_SITE_KEY}
+            options={{ action: "contact" }}
             onSuccess={(token) => {
               setWidgetError("");
               setValue("spam_token", token, { shouldValidate: true });
