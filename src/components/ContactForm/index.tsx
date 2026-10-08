@@ -2,7 +2,7 @@
 
 import { submitContact } from "@/actions/submitContact";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Turnstile } from "@marsidev/react-turnstile";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -17,6 +17,8 @@ import {
   type ContactFormValues,
   type InquiryTag,
 } from "./types";
+
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
 const inputClasses =
   "w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-navy focus:border-transparent";
@@ -86,7 +88,9 @@ export default function ContactForm() {
   const searchParams = useSearchParams();
   const utmRef = useRef<{ utm_source?: string; utm_medium?: string; utm_campaign?: string }>({});
   const hasCapturedUtm = useRef(false);
+  const turnstileRef = useRef<TurnstileInstance>(null);
   const [submitError, setSubmitError] = useState<string>("");
+  const [widgetError, setWidgetError] = useState<string>("");
   const [successTag, setSuccessTag] = useState<InquiryTag | null>(null);
 
   const {
@@ -146,7 +150,19 @@ export default function ContactForm() {
     }
   }, [setValue, showMediaSpeakerFields, showPartnershipFields, showPotentialClientFields]);
 
-  const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
+  useEffect(() => {
+    if (!TURNSTILE_SITE_KEY) {
+      console.error(
+        "[contact] NEXT_PUBLIC_TURNSTILE_SITE_KEY is missing from the client bundle. " +
+          "It must be defined at build time, not only as a Worker var or secret.",
+      );
+    }
+  }, []);
+
+  const resetTurnstile = () => {
+    setValue("spam_token", "");
+    turnstileRef.current?.reset();
+  };
 
   const onSubmit = handleSubmit(async (values) => {
     setSubmitError("");
@@ -168,6 +184,8 @@ export default function ContactForm() {
 
     if (!result.success) {
       setSubmitError(result.error ?? "Unable to send your message right now.");
+      // Turnstile tokens are single-use: always request a fresh one after a failed attempt.
+      resetTurnstile();
       return;
     }
 
@@ -458,18 +476,33 @@ export default function ContactForm() {
       </div>
 
       <div>
-        <Turnstile
-          siteKey={turnstileSiteKey}
-          onSuccess={(token) => {
-            setValue("spam_token", token, { shouldValidate: true });
-          }}
-          onExpire={() => {
-            setValue("spam_token", "", { shouldValidate: true });
-          }}
-          onError={() => {
-            setValue("spam_token", "", { shouldValidate: true });
-          }}
-        />
+        {TURNSTILE_SITE_KEY ? (
+          <Turnstile
+            ref={turnstileRef}
+            siteKey={TURNSTILE_SITE_KEY}
+            onSuccess={(token) => {
+              setWidgetError("");
+              setValue("spam_token", token, { shouldValidate: true });
+            }}
+            onExpire={() => {
+              setValue("spam_token", "", { shouldValidate: true });
+            }}
+            onError={(code) => {
+              console.error("[contact] Turnstile error:", code);
+              setWidgetError(`Spam check failed to load (${code}). Please refresh and try again.`);
+              setValue("spam_token", "", { shouldValidate: true });
+            }}
+          />
+        ) : (
+          <p role="alert" className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+            Spam protection is unavailable right now. Please email info@boguesgroup.com.
+          </p>
+        )}
+        {widgetError ? (
+          <p role="alert" className="mt-1 text-sm text-red-600">
+            {widgetError}
+          </p>
+        ) : null}
         {errors.spam_token ? (
           <p id="spam_token-error" className="mt-1 text-sm text-red-600">
             {errors.spam_token.message}
@@ -479,7 +512,7 @@ export default function ContactForm() {
 
       <button
         type="submit"
-        disabled={isSubmitting}
+        disabled={isSubmitting || !TURNSTILE_SITE_KEY}
         className="w-full bg-gold text-navy font-bold py-4 px-8 rounded-lg hover:bg-gold-light transition-colors text-lg disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isSubmitting ? (
