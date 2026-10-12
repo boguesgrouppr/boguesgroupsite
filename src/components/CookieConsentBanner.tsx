@@ -25,9 +25,10 @@ export function CookieConsentBanner() {
     >
       <div className="mx-auto flex max-w-6xl flex-col gap-5 px-6 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
         <p className="text-sm leading-relaxed text-white/70">
-          We use cookies to analyze site traffic and improve your experience
-          on our site. By clicking &ldquo;Accept&rdquo;, you agree to our use
-          of cookies as described in our{" "}
+          We use cookies to analyze site traffic and see how visitors use our
+          pages, including anonymized heat maps and session recordings, so we
+          can improve your experience. By clicking &ldquo;Accept&rdquo;, you
+          agree to our use of cookies as described in our{" "}
           <Link
             href="/privacy"
             className="font-medium text-gold underline underline-offset-2 hover:text-gold/80"

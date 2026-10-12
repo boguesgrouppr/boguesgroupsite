@@ -1,16 +1,37 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import Script from "next/script";
 import { useConsent } from "@/contexts/ConsentProvider";
 import { GaPageviewTracker } from "@/components/GaPageviewTracker";
 
 const GA4_MEASUREMENT_ID = "G-H9KDXM5VSF";
+const CLARITY_PROJECT_ID = "ywekv27cew";
 const GTM_CONTAINER_ID: string | undefined = undefined;
 
+declare global {
+  interface Window {
+    clarity?: (...args: unknown[]) => void;
+  }
+}
 
 export function Analytics() {
   const { consent } = useConsent();
+  const wasGranted = useRef(false);
+
+  // Scripts already running can't be unloaded, so when consent is withdrawn
+  // (e.g. via the preferences link) wipe Clarity's cookies and reload clean.
+  useEffect(() => {
+    if (consent === "granted") {
+      wasGranted.current = true;
+      return;
+    }
+    if (wasGranted.current) {
+      wasGranted.current = false;
+      window.clarity?.("consent", false);
+      window.location.reload();
+    }
+  }, [consent]);
 
   if (consent !== "granted") return null;
 
@@ -27,6 +48,17 @@ export function Analytics() {
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
           gtag('config', '${GA4_MEASUREMENT_ID}');
+        `}
+      </Script>
+
+      <Script id="ms-clarity" strategy="afterInteractive">
+        {`
+          (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+          })(window,document,"clarity","script","${CLARITY_PROJECT_ID}");
+          window.clarity("consentv2", { ad_Storage: "denied", analytics_Storage: "granted" });
         `}
       </Script>
 

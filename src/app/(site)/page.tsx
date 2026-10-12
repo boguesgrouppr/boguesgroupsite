@@ -161,13 +161,52 @@ const clients: ClientLogo[] = [
     width: 200,
     height: 200,
   },
-  { src: "/logos/Kraft.PNG", alt: "Kraft", href: "/case-studies/kraft", width: 3840, height: 2160 },
-  { src: "/logos/american_express.PNG", alt: "American Express", width: 225, height: 224 },
-  { src: "/logos/capital_one.PNG", alt: "Capital One", width: 4096, height: 4096 },
-  { src: "/logos/charlotte_crown.PNG", alt: "Charlotte Crown", width: 319, height: 313 },
-  { src: "/logos/charlotte_hornets.JPG", alt: "Charlotte Hornets", width: 228, height: 221 },
-  { src: "/logos/crva.PNG", alt: "CRVA", width: 512, height: 266 },
-  { src: "/logos/toronto_raptors.PNG", alt: "Toronto Raptors", width: 225, height: 225 },
+  {
+    src: "/logos/Kraft.PNG",
+    alt: "Kraft",
+    href: "/case-studies/kraft",
+    width: 3840,
+    height: 2160,
+  },
+  {
+    src: "/logos/american_express.PNG",
+    alt: "American Express",
+    href: "/case-studies/american-express-golden-state-warriors",
+    width: 225,
+    height: 224,
+  },
+  {
+    src: "/logos/capital_one.PNG",
+    alt: "Capital One",
+    width: 4096,
+    height: 4096,
+  },
+  {
+    src: "/logos/charlotte_crown.PNG",
+    alt: "Charlotte Crown",
+    width: 319,
+    height: 313,
+  },
+  {
+    src: "/logos/charlotte_hornets.JPG",
+    alt: "Charlotte Hornets",
+    href: "/case-studies/charlotte-hornets-community-court",
+    width: 228,
+    height: 221,
+  },
+  {
+    src: "/logos/crva.PNG",
+    alt: "CRVA",
+    href: "/case-studies/crva-charlotte-crown-home-opener",
+    width: 512,
+    height: 266,
+  },
+  {
+    src: "/logos/toronto_raptors.PNG",
+    alt: "Toronto Raptors",
+    width: 225,
+    height: 225,
+  },
 ];
 
 interface NewsFeedItem {
@@ -181,7 +220,7 @@ interface NewsFeedItem {
   client?: string;
 }
 
-const CAMPAIGN_TAG = ""; 
+const CAMPAIGN_TAG = "";
 
 interface SocialLink {
   label: string;
@@ -309,7 +348,6 @@ function CaseStudyHighlightCard({
     </NavLink>
   );
 }
-
 
 function FeaturedFeedCard({ item }: { item: NewsFeedItem }) {
   const href =
@@ -787,7 +825,6 @@ export default async function Home() {
           </div>
         </div>
       </section>
-
 
       {RESOURCES.length > 0 && (
         <section className="bg-gray-50 px-6 py-14 md:py-20">
