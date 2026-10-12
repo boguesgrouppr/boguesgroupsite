@@ -667,14 +667,13 @@ export default function BrandBuilderHubContent() {
             </ul>
           </div>
           <div className="mt-8 md:mt-0 md:shrink-0">
-            <NavLink
-              href="/collective-grow"
+            <span
               aria-disabled="true"
-              className="inline-flex items-center whitespace-nowrap rounded-lg bg-gold px-8 py-4 text-base font-bold text-[#021f2e] shadow-lg transition-all duration-300 hover:scale-[1.03] hover:bg-[#e5c256] hover:shadow-xl"
+              className="inline-flex cursor-not-allowed select-none items-center whitespace-nowrap rounded-lg bg-gold px-8 py-4 text-base font-bold text-[#021f2e] opacity-50 shadow-lg"
             >
               Explore Collective Grow
-              <ArrowRightIcon className="ml-2 h-5 w-5" />
-            </NavLink>
+              <ArrowRightIcon className="ml-2 h-5 w-5" aria-hidden="true" />
+            </span>
           </div>
         </div>
       </section>
