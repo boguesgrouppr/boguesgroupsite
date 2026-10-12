@@ -1,4 +1,3 @@
-// app/privacy/page.tsx
 import type { Metadata } from "next";
 import Hero from "@/components/Hero";
 
@@ -31,6 +30,7 @@ const sections: PrivacySection[] = [
     title: "1. Information We Collect",
     body: [
       "We collect information that you provide directly to us, such as when you create an account, make a purchase, or contact us for support. This may include your name, email address, mailing address, phone number, and payment information.",
+      "With your consent, we also collect information automatically when you use our website, such as the pages you visit, how you interact with them, your approximate location, and your device and browser type. See Section 7 for details.",
     ],
   },
   {
@@ -65,11 +65,23 @@ const sections: PrivacySection[] = [
   {
     title: "6. Cookies",
     body: [
-      "We use cookies to enhance your experience on our website. You can choose to disable cookies through your browser settings, though this may affect the functionality of the site.",
+      "We use cookies to enhance your experience on our website. Analytics cookies are only set after you click \u201cAccept\u201d on our cookie banner. If you click \u201cDecline\u201d, our analytics and session recording tools do not load.",
+      "You can change your choice at any time using the Cookie Preferences link on our site. You can also disable cookies through your browser settings, though this may affect the functionality of the site.",
     ],
   },
   {
-    title: "7. Changes to This Policy",
+    title: "7. Analytics and Session Recording",
+    body: [
+      "With your consent, we use the following tools to understand how visitors use our site so we can improve it:",
+    ],
+    items: [
+      "Google Analytics collects information such as the pages you visit, how long you stay, your approximate location, and your device and browser type.",
+      "Microsoft Clarity records how visitors interact with our pages, including clicks, scrolling, mouse movement, and pages viewed, and shows this to us as heat maps and session recordings. Text you type into our forms is masked and is not recorded. Clarity may use cookies to link the pages of a visit together. You can read how Microsoft handles this data in the Microsoft Privacy Statement at privacy.microsoft.com/privacystatement.",
+      "Cloudflare Web Analytics measures site traffic and performance without using cookies or tracking individual visitors across sites.",
+    ],
+  },
+  {
+    title: "8. Changes to This Policy",
     body: [
       "We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page.",
     ],
@@ -107,7 +119,7 @@ export default function PrivacyPage() {
           ))}
 
           <div>
-            <h2 className="font-heading text-xl font-bold text-navy">8. Contact Us</h2>
+            <h2 className="font-heading text-xl font-bold text-navy">9. Contact Us</h2>
             <p className="mt-3 leading-relaxed text-gray-600">
               If you have any questions about this Privacy Policy, please contact us at{" "}
               <a href="mailto:info@boguesgroup.com" className="font-medium text-[#075E8B] hover:text-gold hover:underline">

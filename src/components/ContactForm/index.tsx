@@ -203,7 +203,7 @@ export default function ContactForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate className="space-y-6">
+    <form onSubmit={onSubmit} data-clarity-mask="True" noValidate className="space-y-6">
       <div>
         <label htmlFor="full_name" className="block text-sm font-semibold text-gray-700 mb-2">
           Full Name
