@@ -425,8 +425,7 @@ export default function BrandBuilderHubContent() {
                 <strong>
                   The Complete Brand Builder Workbook is a practical, hands-on
                   resource designed to help entrepreneurs, business owners,
-                  students, and professionals build a brand from the inside
-                  out.
+                  students, and professionals build a brand from the inside out.
                 </strong>
               </p>
               <p className="mt-3 leading-relaxed text-body">
@@ -667,13 +666,13 @@ export default function BrandBuilderHubContent() {
             </ul>
           </div>
           <div className="mt-8 md:mt-0 md:shrink-0">
-            <span
-              aria-disabled="true"
-              className="inline-flex cursor-not-allowed select-none items-center whitespace-nowrap rounded-lg bg-gold px-8 py-4 text-base font-bold text-[#021f2e] opacity-50 shadow-lg"
+            <NavLink
+              href="/cannabis-fund"
+              className="inline-flex items-center whitespace-nowrap rounded-lg bg-gold px-8 py-4 text-base font-bold text-[#021f2e] shadow-lg transition-all duration-300 hover:scale-[1.03] hover:bg-[#e5c256] hover:shadow-xl"
             >
               Explore Collective Grow
               <ArrowRightIcon className="ml-2 h-5 w-5" aria-hidden="true" />
-            </span>
+            </NavLink>
           </div>
         </div>
       </section>

@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
     return [
       { source: "/small-business-hub", destination: `${SITE}/brand-builder-hub`, permanent: true },
       { source: "/small-business-hub/:path*", destination: `${SITE}/brand-builder-hub`, permanent: true },
+      { source: "/collective-grow", destination: `${SITE}/brand-builder-hub`, permanent: true },
       { source: "/blog/:slug(__trashed.*)", destination: `${SITE}/blog`, permanent: true },
       { source: "/category/:path*", destination: `${SITE}/blog`, permanent: true },
       { source: "/tag/:path*", destination: `${SITE}/blog`, permanent: true },

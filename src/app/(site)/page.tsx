@@ -129,7 +129,7 @@ const clients: ClientLogo[] = [
   {
     src: "/logos/muggsy.png",
     alt: "Muggsy Bogues",
-    href: "/case-studies/muggsy-bogues-family-foundation",
+    href: "/case-studies/american-express-golden-state-warriors",
     width: 500,
     height: 108,
   },
@@ -184,6 +184,7 @@ const clients: ClientLogo[] = [
   {
     src: "/logos/charlotte_crown.PNG",
     alt: "Charlotte Crown",
+    href: "/case-studies/crva-charlotte-crown-home-opener",
     width: 319,
     height: 313,
   },
@@ -204,6 +205,7 @@ const clients: ClientLogo[] = [
   {
     src: "/logos/toronto_raptors.PNG",
     alt: "Toronto Raptors",
+    href: "/case-studies/bleacher-report-br-takeover",
     width: 225,
     height: 225,
   },

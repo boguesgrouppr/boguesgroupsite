@@ -47,7 +47,12 @@ const rubik = localFont({
   display: "swap",
 });
 
+const SITE_URL = "https://www.boguesgroup.com";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  // Relative canonical: resolves against metadataBase + each route's own path.
+  alternates: { canonical: "./" },
   title: "Bogues Group - North Carolina's Premier PR Firm",
   description:
     "Bogues Group is North Carolina's premier public relations firm, delivering strategic communications, media relations, and brand storytelling for businesses across the state.",
@@ -63,6 +68,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Bogues Group",
     locale: "en_US",
+    url: "./",
   },
   twitter: {
     card: "summary_large_image",
