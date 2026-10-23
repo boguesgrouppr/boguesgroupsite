@@ -1,5 +1,6 @@
-const SITE_URL = "https://boguesgroup.com";
+const SITE_URL = "https://www.boguesgroup.com";
 const LOGO_URL = `${SITE_URL}/logo.png`;
+const ORGANIZATION_ID = `${SITE_URL}/#organization`;
 
 const SOCIAL_PROFILES = [
   "https://www.facebook.com/BoguesGroup/",
@@ -37,7 +38,7 @@ interface OrganizationSchema {
 export function buildOrganizationSchema(): OrganizationSchema {
   return {
     "@type": "Organization",
-    "@id": `${SITE_URL}/#organization`,
+    "@id": ORGANIZATION_ID,
     name: "Bogues Group",
     url: SITE_URL,
     logo: LOGO_URL,
@@ -91,23 +92,21 @@ export function buildLocalBusinessSchema(): LocalBusinessSchema {
 interface ReviewSchemaInput {
   testimonial: string;
   testimonialAuthor: string;
-  /** Case study title, used as the itemReviewed name. */
+  /** Case study title, used as the review name. */
   serviceName: string;
-  /** Absolute URL of the case study detail page. */
+  /** Absolute www URL of the case study detail page. */
   pageUrl: string;
 }
 
 interface ReviewSchema {
   [key: string]: unknown;
   "@type": "Review";
+  name: string;
   itemReviewed: {
-    "@type": "Service";
+    "@type": "Organization";
+    "@id": string;
     name: string;
-    provider: {
-      "@type": "Organization";
-      name: string;
-      "@id": string;
-    };
+    url: string;
   };
   reviewBody: string;
   author: {
@@ -120,14 +119,14 @@ interface ReviewSchema {
 export function buildReviewSchema(input: ReviewSchemaInput): ReviewSchema {
   return {
     "@type": "Review",
+    name: input.serviceName,
+    // "Service" is not a supported itemReviewed type for review snippets.
+    // Reference the Organization node already emitted in the root layout.
     itemReviewed: {
-      "@type": "Service",
-      name: input.serviceName,
-      provider: {
-        "@type": "Organization",
-        name: "Bogues Group",
-        "@id": `${SITE_URL}/#organization`,
-      },
+      "@type": "Organization",
+      "@id": ORGANIZATION_ID,
+      name: "Bogues Group",
+      url: SITE_URL,
     },
     reviewBody: input.testimonial,
     author: {

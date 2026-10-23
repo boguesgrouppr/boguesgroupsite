@@ -306,7 +306,7 @@ export default async function CaseStudyPage({
             testimonial: caseStudy.testimonial!,
             testimonialAuthor: caseStudy.testimonial_author!,
             serviceName: caseStudy.title,
-            pageUrl: `https://boguesgroup.com/case-studies/${caseStudy.slug}`,
+            pageUrl: `https://www.boguesgroup.com/case-studies/${caseStudy.slug}`,
           })}
         />
       )}
