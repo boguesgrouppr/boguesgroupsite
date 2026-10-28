@@ -178,6 +178,7 @@ const clients: ClientLogo[] = [
   {
     src: "/logos/capital_one.PNG",
     alt: "Capital One",
+    href: "/case-studies/capital-one",
     width: 4096,
     height: 4096,
   },
