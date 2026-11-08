@@ -3,6 +3,7 @@ export type CaseStudyCategory =
   | "community_impact"
   | "brand_activations"
   | "public_relations"
+  | "government_nonprofit"
   | "momentum"
   | "crisis_communications"
   | "hospitality";
@@ -44,6 +45,7 @@ const CATEGORY_LABELS: Record<CaseStudyCategory, string> = {
   community_impact: "Community Impact",
   brand_activations: "Brand Activations",
   public_relations: "Public Relations",
+  government_nonprofit: "Government / Nonprofit",
   momentum: "Momentum",
   crisis_communications: "Crisis Communications",
   hospitality: "Hospitality",
@@ -54,6 +56,7 @@ const CATEGORY_TAB_LABELS: Record<CaseStudyCategory, string> = {
   community_impact: "Community Impact",
   brand_activations: "Brand Activations",
   public_relations: "Public Relations",
+  government_nonprofit: "Government / Nonprofit",
   momentum: "Momentum",
   crisis_communications: "Crisis Communications",
   hospitality: "Hospitality",
@@ -118,6 +121,7 @@ export const CASE_STUDY_TABS: {
   { id: "community_impact", label: "Community Impact" },
   { id: "brand_activations", label: "Brand Activations" },
   { id: "public_relations", label: "Public Relations" },
+  { id: "government_nonprofit", label: "Government / Nonprofit" },
   { id: "momentum", label: "Momentum" },
   { id: "crisis_communications", label: "Crisis Communications" },
   { id: "hospitality", label: "Hospitality" },
