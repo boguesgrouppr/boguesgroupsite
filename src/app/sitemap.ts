@@ -26,12 +26,19 @@ const STATIC_ROUTES: ReadonlyArray<{ path: string; priority: number }> = [
 ];
 
 // Published rows that should not be in the sitemap (duplicates / junk).
-// Prefer noindex or a merge on the page itself; this keeps them out meanwhile.
+// Prefer noindex, a merge, or a 301 on the page itself; this keeps them out meanwhile.
 const EXCLUDED_BLOG_SLUGS: ReadonlySet<string> = new Set([
   'bg-interview-brittney-bogues-ynz8k',
   'bg-interview-jodi-rizzo-5ofjq',
   'fall-intern-spotlight-paris-clark-ba4i5',
   '06q7huklb03xbzsd43tjdncqfguwil-da6kh',
+  'holiday-wishes-from-bg-9h6e4',
+  'narcan-to-be-part-of-charlotte-abc-store-renovation-devices-coming-to-all-mecklenburg-county-stores-2',
+  '3ctlvjstnmsutdrdzfl07iu627z99a',
+  '9n69wkt9zpm6s3ahm9dxkuklopvezd',
+  'coasvyazwc5qauo8uv11uuadodvrs5',
+  '2019-06-04-2019-6-4-s98g20gxhrhosn76z8qhel3196m3ab',
+  '2019-09-26-2019-9-26-biumeaqmstvtg14xka2x6b80g6ric0',
 ]);
 
 const SLUG_PATTERN = /^[a-z0-9-]+$/;
@@ -52,8 +59,9 @@ async function fetchSlugs(
   // updated_at may not exist on every table; retry with slug only.
   const slugOnly = await supabase.from(table).select('slug').eq(filterColumn, filterValue);
   if (slugOnly.error) {
-    console.error(`sitemap: failed to load ${table}`, slugOnly.error.message);
-    return [];
+    // Throw rather than return []: a failed revalidation should keep the last
+    // good sitemap instead of caching one with the section missing.
+    throw new Error(`sitemap: failed to load ${table}: ${slugOnly.error.message}`);
   }
   return ((slugOnly.data ?? []) as Array<{ slug: string }>).map(({ slug }) => ({
     slug,
@@ -73,6 +81,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     fetchSlugs(supabase, 'case_studies', 'is_published', true),
     fetchSlugs(supabase, 'blog_posts', 'status', 'publish'),
   ]);
+
+  // An empty result almost always means a silent failure (restricted project,
+  // RLS change), not a site with no content. Fail loudly instead.
+  if (caseStudies.length === 0 || blogPosts.length === 0) {
+    throw new Error(
+      `sitemap: unexpected empty result (case_studies=${caseStudies.length}, blog_posts=${blogPosts.length})`,
+    );
+  }
 
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map(({ path, priority }) => ({
     url: `${SITE_URL}${path}`,

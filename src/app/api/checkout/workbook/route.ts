@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const origin = req.headers.get("origin") ?? "https://www.boguesgroup.com";
+    const origin = req.headers.get('origin') ?? 'https://www.boguesgroup.com';
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
