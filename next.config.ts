@@ -10,9 +10,21 @@ const nextConfig: NextConfig = {
       { source: "/small-business-hub", destination: `${SITE}/brand-builder-hub`, permanent: true },
       { source: "/small-business-hub/:path*", destination: `${SITE}/brand-builder-hub`, permanent: true },
       { source: "/collective-grow", destination: `${SITE}/brand-builder-hub`, permanent: true },
+      { source: "/collectivegrow", destination: `${SITE}/brand-builder-hub`, permanent: true },
       { source: "/blog/:slug(__trashed.*)", destination: `${SITE}/blog`, permanent: true },
       { source: "/category/:path*", destination: `${SITE}/blog`, permanent: true },
       { source: "/tag/:path*", destination: `${SITE}/blog`, permanent: true },
+      {
+        source: "/blog/holiday-wishes-from-bg-9h6e4",
+        destination: `${SITE}/blog/holiday-wishes-from-bg`,
+        permanent: true,
+      },
+      {
+        source:
+          "/blog/narcan-to-be-part-of-charlotte-abc-store-renovation-devices-coming-to-all-mecklenburg-county-stores-2",
+        destination: `${SITE}/blog/narcan-to-be-part-of-charlotte-abc-store-renovation-devices-coming-to-all-mecklenburg-county-stores`,
+        permanent: true,
+      },
     ];
   },
   images: {
