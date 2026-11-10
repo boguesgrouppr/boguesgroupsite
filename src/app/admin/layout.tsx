@@ -1,8 +1,6 @@
-"use client";
-
-import AdminShell from "@/components/admin/AdminShell";
-import { AuthProvider } from "@/contexts/AuthContext";
-import type { Metadata } from 'next';
+import type { ReactNode } from "react";
+import type { Metadata } from "next";
+import AdminProviders from "./AdminProviders";
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
@@ -11,11 +9,7 @@ export const metadata: Metadata = {
 export default function AdminLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
-  return (
-    <AuthProvider>
-      <AdminShell>{children}</AdminShell>
-    </AuthProvider>
-  );
+  return <AdminProviders>{children}</AdminProviders>;
 }
